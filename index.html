@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>クメール語単語帳</title>
+<meta name="theme-color" content="#1f3d73">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="クメール単語">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ============ ホーム画面 ============ -->
+  <section id="screen-home" class="screen">
+    <div class="hero dq-window dq-window-frame">
+      <button class="profile-chip" id="home-profile-btn">👤 <span id="home-profile-name">学習者1</span> ▾</button>
+      <h1>クメール語単語帳</h1>
+      <div class="sub">毎日ちょっとずつ、楽しく覚えよう</div>
+      <div class="rank-title" id="home-rank-title">見習い冒険者</div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-tile dq-window">
+        <div class="value" id="home-streak">0</div>
+        <div class="label">連続日数</div>
+      </div>
+      <div class="stat-tile dq-window">
+        <div class="value" id="home-level">1</div>
+        <div class="label">レベル</div>
+      </div>
+      <div class="stat-tile dq-window">
+        <div class="value" id="home-due-count">0</div>
+        <div class="label">今日の復習</div>
+      </div>
+      <div class="stat-tile dq-window">
+        <div class="value" id="home-total-days">0</div>
+        <div class="label">累計日数</div>
+      </div>
+      <div class="stat-tile dq-window">
+        <div class="value" id="home-total-time">0分</div>
+        <div class="label">累計学習時間</div>
+      </div>
+    </div>
+
+    <div class="card dq-window">
+      <div class="card-label-row">
+        <span>XP <span id="home-xp">0</span></span>
+        <span id="home-xp-next">次のレベルまで あと100</span>
+      </div>
+      <div class="xp-bar-track"><div class="xp-bar-fill" id="home-xp-bar" style="width:0%"></div></div>
+    </div>
+
+    <div class="card dq-window">
+      <div class="card-label-row">
+        <span>今日の目標</span>
+        <span id="home-goal-label">0 / 20問（残り20問）</span>
+      </div>
+      <div class="xp-bar-track"><div class="xp-bar-fill" id="home-goal-bar" style="width:0%"></div></div>
+    </div>
+
+    <button class="cta-button dq-window" id="home-start-btn">今日の学習をはじめる</button>
+
+    <div id="home-badge-notice"></div>
+  </section>
+
+  <!-- ============ クイズ画面 ============ -->
+  <section id="screen-quiz" class="screen">
+    <div class="quiz-progress">
+      <span id="quiz-progress-label">1 / 10</span>
+      <div class="xp-bar-track"><div class="xp-bar-fill" id="quiz-progress-bar" style="width:0%"></div></div>
+    </div>
+
+    <div id="quiz-feedback-banner"></div>
+
+    <div class="quiz-card dq-window dq-window-frame" id="quiz-card">
+      <!-- screens/quiz.js が動的に描画 -->
+    </div>
+
+    <div id="quiz-answer-area">
+      <!-- screens/quiz.js が動的に描画（4択 or フラッシュカードの表裏ボタン） -->
+    </div>
+
+    <button class="secondary-button" id="quiz-quit-btn" style="margin-top:14px;">中断してホームへ</button>
+  </section>
+
+  <!-- ============ 結果画面 ============ -->
+  <section id="screen-result" class="screen">
+    <div id="result-levelup"></div>
+    <div class="dq-window dq-window-frame result-hero">
+      <div class="sub">おつかれさまでした！</div>
+      <div class="big-xp" id="result-xp">+0 XP</div>
+      <div id="result-summary" style="margin-top:8px; color:var(--dq-window-text); font-size:13px; opacity:0.85;"></div>
+    </div>
+
+    <div id="result-badges"></div>
+
+    <button class="cta-button" id="result-again-btn">もう一度学習する</button>
+    <div style="height:10px;"></div>
+    <button class="secondary-button" id="result-home-btn">ホームへ戻る</button>
+  </section>
+
+  <!-- ============ 単語一覧/図鑑 ============ -->
+  <section id="screen-wordlist" class="screen">
+    <h2 class="dq-window">単語図鑑</h2>
+    <div class="filter-row" id="wordlist-filters">
+      <button class="filter-chip active" data-filter="all">すべて</button>
+      <button class="filter-chip" data-filter="core70">超重要70選</button>
+      <button class="filter-chip" data-filter="rank1">❔ 未出題</button>
+      <button class="filter-chip" data-filter="rank2">⚠️ 苦手</button>
+      <button class="filter-chip" data-filter="rank3">🌱 学習中</button>
+      <button class="filter-chip" data-filter="rank4">🛡️ 定着</button>
+      <button class="filter-chip" data-filter="rank5">⭐ マスター</button>
+    </div>
+    <div id="wordlist-content"><!-- screens/wordlist.js が動的に描画 --></div>
+  </section>
+
+  <!-- ============ 実績画面 ============ -->
+  <section id="screen-achievements" class="screen">
+    <h2>実績・レベル</h2>
+
+    <div class="filter-row" id="achievements-tabs">
+      <button class="filter-chip active" data-tab="level">レベル</button>
+      <button class="filter-chip" data-tab="badges">バッジ</button>
+      <button class="filter-chip" data-tab="titles">称号</button>
+    </div>
+
+    <div id="achievements-tab-level">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+          <div><span style="font-size:26px; font-weight:900; color:var(--accent);" id="ach-level">Lv.1</span></div>
+          <div style="font-size:12px; color:var(--ink-soft);" id="ach-xp">0 XP</div>
+        </div>
+        <div class="rank-title" id="ach-rank-title">見習い冒険者</div>
+        <div class="xp-bar-track" style="margin-top:8px;"><div class="xp-bar-fill" id="ach-xp-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div id="achievements-tab-badges" style="display:none;">
+      <div class="badge-grid" id="achievements-grid"><!-- screens/achievements.js が動的に描画 --></div>
+    </div>
+
+    <div id="achievements-tab-titles" style="display:none;">
+      <div class="title-list" id="achievements-titles-list"><!-- screens/achievements.js が動的に描画 --></div>
+    </div>
+  </section>
+
+  <!-- ============ 設定画面 ============ -->
+  <section id="screen-settings" class="screen">
+    <h2>設定</h2>
+    <div class="card">
+      <label style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <span>読み仮名を表示する</span>
+        <input type="checkbox" id="setting-show-reading" checked>
+      </label>
+      <label style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <span>日本語→クメール語の出題を含める</span>
+        <input type="checkbox" id="setting-enable-jp-to-km" checked>
+      </label>
+      <label style="display:flex; justify-content:space-between; align-items:center;">
+        <span>ボタンの効果音を鳴らす</span>
+        <input type="checkbox" id="setting-sound-enabled" checked>
+      </label>
+    </div>
+
+    <div class="card">
+      <div style="font-weight:700; margin-bottom:8px;">出題範囲</div>
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="quiz-scope" id="setting-scope-all" value="all" checked>
+          <span>全258単語</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="quiz-scope" id="setting-scope-core70" value="core70">
+          <span>超重要70選のみ</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-weight:700; margin-bottom:8px;">1回の出題数</div>
+      <div class="chip-radio-group" id="setting-session-size-group">
+        <label class="chip-radio"><input type="radio" name="session-size" value="5"><span>5問</span></label>
+        <label class="chip-radio"><input type="radio" name="session-size" value="10"><span>10問</span></label>
+        <label class="chip-radio"><input type="radio" name="session-size" value="15"><span>15問</span></label>
+        <label class="chip-radio"><input type="radio" name="session-size" value="20" checked><span>20問</span></label>
+        <label class="chip-radio"><input type="radio" name="session-size" value="30"><span>30問</span></label>
+        <label class="chip-radio"><input type="radio" name="session-size" value="50"><span>50問</span></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-weight:700; margin-bottom:8px;">1日の目標問題数</div>
+      <div class="chip-radio-group" id="setting-daily-goal-group">
+        <label class="chip-radio"><input type="radio" name="daily-goal" value="5"><span>5問</span></label>
+        <label class="chip-radio"><input type="radio" name="daily-goal" value="10"><span>10問</span></label>
+        <label class="chip-radio"><input type="radio" name="daily-goal" value="15"><span>15問</span></label>
+        <label class="chip-radio"><input type="radio" name="daily-goal" value="20" checked><span>20問</span></label>
+        <label class="chip-radio"><input type="radio" name="daily-goal" value="30"><span>30問</span></label>
+        <label class="chip-radio"><input type="radio" name="daily-goal" value="50"><span>50問</span></label>
+        <label class="chip-radio"><input type="radio" name="daily-goal" value="100"><span>100問</span></label>
+        <label class="chip-radio"><input type="radio" name="daily-goal" value="200"><span>200問</span></label>
+        <label class="chip-radio"><input type="radio" name="daily-goal" value="300"><span>300問</span></label>
+      </div>
+    </div>
+
+    <button class="secondary-button" id="setting-reset-btn">学習データをリセットする</button>
+
+    <div style="text-align:center; font-size:11px; color:var(--ink-soft); margin-top:18px;" id="setting-version-info"></div>
+  </section>
+
+</div>
+
+<div id="profile-switcher-overlay" class="modal-overlay">
+  <div class="modal-panel">
+    <h3>学習者を選択</h3>
+    <div id="profile-list" class="profile-list"><!-- profile-switcher.js が動的に描画 --></div>
+    <button class="secondary-button" id="profile-add-btn">＋ 新しい学習者を追加</button>
+    <button class="secondary-button" id="profile-close-btn">閉じる</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="#home" data-screen="home"><span class="icon">🏠</span>ホーム</a>
+  <a href="#wordlist" data-screen="wordlist"><span class="icon">📖</span>図鑑</a>
+  <a href="#achievements" data-screen="achievements"><span class="icon">🏅</span>実績</a>
+  <a href="#settings" data-screen="settings"><span class="icon">⚙️</span>設定</a>
+</nav>
+
+<script src="data/words.js"></script>
+<script src="js/version.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/word-audio.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/profile-switcher.js"></script>
+<script src="js/srs.js"></script>
+<script src="js/quiz-engine.js"></script>
+<script src="js/gamification.js"></script>
+<script src="js/screens/home.js"></script>
+<script src="js/screens/quiz.js"></script>
+<script src="js/screens/result.js"></script>
+<script src="js/screens/wordlist.js"></script>
+<script src="js/screens/achievements.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

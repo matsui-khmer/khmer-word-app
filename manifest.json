@@ -1,0 +1,17 @@
+{
+  "name": "クメール語単語帳",
+  "short_name": "クメール単語",
+  "description": "クメール語重要単語258選を、間隔反復とゲーミフィケーションで楽しく覚えるアプリ",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f6f2e6",
+  "theme_color": "#1f3d73",
+  "lang": "ja",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

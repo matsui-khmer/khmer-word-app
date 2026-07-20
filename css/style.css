@@ -1,0 +1,962 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;500;600;700&family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=DotGothic16&display=swap');
+
+:root {
+  /* 紺碧と山吹（フラット・グラデーションなし） */
+  --paper: #f6f2e6;
+  --card: #ffffff;
+  --card-soft: #eee2c4;
+  --ink: #2a2a2a;
+  --ink-soft: #847c66;
+  --border: #e0d6b0;
+  --accent: #1f3d73;
+  --accent-strong: #2f579e;
+  --accent-soft: #dce4f2;
+  --success: #35c46a;
+  --success-soft: #dff7e6;
+  --danger: #ff5c5c;
+  --danger-soft: #ffe1de;
+  --gold: #c9971f;
+  --gold-soft: #f6e8c6;
+  --shadow: 0 4px 16px rgba(31, 61, 115, 0.15);
+
+  /* 背景の二層ドット模様 */
+  --bg-dot-accent: rgba(31, 61, 115, 0.14);
+  --bg-dot-gold: rgba(201, 151, 31, 0.18);
+  --bg-dot-fine: rgba(31, 61, 115, 0.07);
+
+  /* DQ風ダイアログテーマ（テーマ非依存・常に濃紺+金） */
+  --dq-window-bg: #16264f;
+  --dq-window-bg-2: #0c1830;
+  --dq-window-border: #f5f1e6;
+  --dq-window-gold: #e8c65a;
+  --dq-window-text: #f7f5ee;
+  --dq-cursor: #e8c65a;
+}
+
+/* OS側がダークモード設定の場合の配色。DQウィンドウ自体は常に濃紺+金なので、
+   ページ背景・素のカード類がダークモードでも違和感なく馴染むように調整する */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14171f;
+    --card: #1c2130;
+    --card-soft: #262c3f;
+    --ink: #eceef2;
+    --ink-soft: #9aa0b0;
+    --border: #333b52;
+    --accent: #6f8fc7;
+    --accent-strong: #8fb0e8;
+    --accent-soft: #232c44;
+    --success: #6fdb92;
+    --success-soft: #2b3b29;
+    --danger: #ff8a8a;
+    --danger-soft: #4a2a24;
+    --gold: #e0b750;
+    --gold-soft: #3d3420;
+    --shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --bg-dot-accent: rgba(111, 143, 199, 0.18);
+    --bg-dot-gold: rgba(224, 183, 80, 0.2);
+    --bg-dot-fine: rgba(111, 143, 199, 0.1);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #14171f;
+  --card: #1c2130;
+  --card-soft: #262c3f;
+  --ink: #eceef2;
+  --ink-soft: #9aa0b0;
+  --border: #333b52;
+  --accent: #6f8fc7;
+  --accent-strong: #8fb0e8;
+  --accent-soft: #232c44;
+  --success: #6fdb92;
+  --success-soft: #2b3b29;
+  --danger: #ff8a8a;
+  --danger-soft: #4a2a24;
+  --gold: #e0b750;
+  --gold-soft: #3d3420;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --bg-dot-accent: rgba(111, 143, 199, 0.18);
+  --bg-dot-gold: rgba(224, 183, 80, 0.2);
+  --bg-dot-fine: rgba(111, 143, 199, 0.1);
+}
+
+:root[data-theme="light"] {
+  --paper: #f6f2e6;
+  --card: #ffffff;
+  --card-soft: #eee2c4;
+  --ink: #2a2a2a;
+  --ink-soft: #847c66;
+  --border: #e0d6b0;
+  --accent: #1f3d73;
+  --accent-strong: #2f579e;
+  --accent-soft: #dce4f2;
+  --success: #35c46a;
+  --success-soft: #dff7e6;
+  --danger: #ff5c5c;
+  --danger-soft: #ffe1de;
+  --gold: #c9971f;
+  --gold-soft: #f6e8c6;
+  --shadow: 0 4px 16px rgba(31, 61, 115, 0.15);
+  --bg-dot-accent: rgba(31, 61, 115, 0.14);
+  --bg-dot-gold: rgba(201, 151, 31, 0.18);
+  --bg-dot-fine: rgba(31, 61, 115, 0.07);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Noto Sans JP', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  padding-bottom: 72px; /* 下部ナビの高さ分 */
+  background-image:
+    radial-gradient(circle at 20% 25%, var(--bg-dot-gold) 2.5px, transparent 3.2px),
+    radial-gradient(circle at 70% 65%, var(--bg-dot-accent) 2.5px, transparent 3.2px),
+    radial-gradient(circle at 45% 90%, var(--bg-dot-gold) 2px, transparent 2.6px),
+    radial-gradient(circle, var(--bg-dot-fine) 1px, transparent 1.3px);
+  background-size: 140px 140px, 140px 140px, 140px 140px, 13px 13px;
+}
+
+.khmer {
+  font-family: 'Noto Sans Khmer', sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Zen Maru Gothic', sans-serif;
+  margin: 0 0 8px;
+}
+
+a { color: inherit; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* ---------- レイアウト共通 ---------- */
+.app-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px 16px 8px;
+}
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+}
+.card-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+
+/* ---------- DQ風メッセージウィンドウ ---------- */
+.dq-window {
+  position: relative;
+  border: 5px solid var(--dq-window-gold);
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--dq-window-bg) 0%, var(--dq-window-bg-2) 100%);
+  color: var(--dq-window-text);
+  padding: 22px 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.dq-window::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 2px solid var(--dq-window-border);
+  border-radius: 9px;
+  pointer-events: none;
+}
+.dq-window::after {
+  content: "◆";
+  position: absolute;
+  top: -13px; left: -13px;
+  right: auto; bottom: auto;
+  color: var(--dq-window-gold);
+  font-size: 14px;
+  text-shadow: 0 0 4px rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+.dq-window .dq-corner-tr,
+.dq-window .dq-corner-bl,
+.dq-window .dq-corner-br { display: none; } /* placeholder, corners drawn via ::after on wrapper below */
+
+/* 四隅の◆を四方向に出すため、追加の疑似要素を持つラッパーとして .dq-window-frame を使う */
+/* .dq-window と組み合わせた際、inset/topなどの指定が混ざって疑似要素の当たり判定が
+   カード全体に広がってしまわないよう、top/right/bottom/leftを必ず4方向とも明示する */
+.dq-window-frame { position: relative; }
+.dq-window-frame::before,
+.dq-window-frame::after {
+  content: "◆";
+  position: absolute;
+  top: auto; right: auto; bottom: auto; left: auto;
+  color: var(--dq-window-gold);
+  font-size: 14px;
+  z-index: 2;
+  text-shadow: 0 0 4px rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+.dq-window-frame::before { top: -8px; left: -8px; }
+.dq-window-frame::after { bottom: -8px; right: -8px; }
+
+/* ---------- ホーム画面・図鑑: ドラゴンクエスト風ウィンドウ（No.1「王道の青ウィンドウ」） ---------- */
+.hero.dq-window {
+  background: linear-gradient(180deg, var(--dq-window-bg) 0%, var(--dq-window-bg-2) 100%);
+  border: 5px solid var(--dq-window-gold);
+  border-radius: 14px;
+}
+.hero.dq-window h1 {
+  color: var(--dq-window-gold);
+}
+.hero.dq-window .sub { color: var(--dq-window-text); opacity: 0.85; }
+.hero.dq-window .rank-title {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--dq-window-gold);
+}
+.hero.dq-window .profile-chip {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--dq-window-text);
+  border-color: transparent;
+}
+
+.stat-tile.dq-window {
+  background: linear-gradient(180deg, var(--dq-window-bg) 0%, var(--dq-window-bg-2) 100%);
+  border: 3px solid var(--dq-window-gold);
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+.stat-tile.dq-window .value {
+  color: var(--dq-window-gold);
+  font-family: 'DotGothic16', 'Zen Maru Gothic', sans-serif;
+}
+.stat-tile.dq-window .label { color: var(--dq-window-text); opacity: 0.8; }
+
+.card.dq-window {
+  background: linear-gradient(180deg, var(--dq-window-bg) 0%, var(--dq-window-bg-2) 100%);
+  border: 3px solid var(--dq-window-gold);
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+.card.dq-window .card-label-row { color: var(--dq-window-text); opacity: 0.85; }
+.card.dq-window .xp-bar-track { background: rgba(255, 255, 255, 0.18); }
+
+/* スタートボタンは「情報を表示するウィンドウ」群とはあえて違う形にし、
+   押すべきアクションだと一目でわかるように金色の丸ボタンにする */
+#home-start-btn.dq-window {
+  background: var(--dq-window-gold);
+  border: none;
+  border-radius: 999px;
+  color: var(--dq-window-bg-2);
+  font-weight: 900;
+  font-family: 'DotGothic16', 'Zen Maru Gothic', sans-serif;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+#home-start-btn.dq-window::before {
+  content: "▶ ";
+  position: static;
+  inset: auto;
+  border: none;
+  border-radius: 0;
+}
+#home-start-btn.dq-window:disabled {
+  background: var(--border);
+  color: var(--ink-soft);
+}
+
+#screen-wordlist h2.dq-window {
+  display: inline-block;
+  background: linear-gradient(180deg, var(--dq-window-bg) 0%, var(--dq-window-bg-2) 100%);
+  border: 3px solid var(--dq-window-gold);
+  border-radius: 8px;
+  color: var(--dq-window-gold);
+  font-family: 'DotGothic16', 'Zen Maru Gothic', sans-serif;
+  padding: 6px 16px;
+  font-size: 16px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+.word-tile.dq-window {
+  background: linear-gradient(180deg, var(--dq-window-bg) 0%, var(--dq-window-bg-2) 100%);
+  border-top: 1px solid var(--dq-window-gold);
+  border-right: 1px solid var(--dq-window-gold);
+  border-bottom: 1px solid var(--dq-window-gold);
+  /* border-leftの色は理解度ランク（.rank-N）側の指定を活かすため、ここでは変更しない */
+}
+.word-tile.dq-window .km { color: var(--dq-window-text); }
+.word-tile.dq-window .reading-tag { background: rgba(255, 255, 255, 0.16); color: var(--dq-window-text); }
+.word-tile.dq-window .jp { color: var(--dq-window-text); opacity: 0.8; }
+.word-tile.dq-window .core70-tag { border-color: rgba(255, 255, 255, 0.35); color: var(--dq-window-gold); }
+.word-tile.dq-window .rank-icon { filter: drop-shadow(0 0 2px rgba(0,0,0,0.6)); }
+
+/* ---------- ホーム画面 ---------- */
+.hero {
+  background: linear-gradient(160deg, var(--card-soft) 0%, var(--paper) 85%);
+  border-radius: 24px;
+  padding: 22px 20px;
+  text-align: center;
+  margin-bottom: 16px;
+  border: 2px solid var(--border);
+}
+.hero h1 {
+  font-size: 22px;
+  font-family: 'DotGothic16', 'Zen Maru Gothic', sans-serif;
+  color: var(--accent-strong);
+  letter-spacing: 1px;
+}
+.hero .sub {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+.profile-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 12px;
+  margin-bottom: 8px;
+}
+
+.rank-title {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  padding: 2px 12px;
+  border-radius: 999px;
+  margin-top: 4px;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 16px 0;
+}
+.stat-tile {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 10px 8px;
+  text-align: center;
+}
+/* 5枚目（累計学習時間）は2列目が空いてしまうため、他のタイルと同じ幅を保ったまま中央寄せする */
+.stat-row .stat-tile:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  width: calc((100% - 10px) / 2);
+  margin: 0 auto;
+}
+.stat-tile .value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent-strong);
+}
+.stat-tile .label {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+.xp-bar-track {
+  background: var(--border);
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+.xp-bar-fill {
+  background: var(--gold);
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.cta-button {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--accent-strong);
+  box-shadow: var(--shadow);
+}
+.cta-button:active { transform: scale(0.98); }
+.cta-button:disabled {
+  background: var(--border);
+  color: var(--ink-soft);
+  box-shadow: none;
+}
+
+.secondary-button {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--card);
+}
+
+/* ---------- クイズ画面 ---------- */
+.quiz-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.quiz-progress .xp-bar-track { flex: 1; }
+
+.quiz-card {
+  margin-bottom: 18px;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+}
+.quiz-card .prompt-khmer {
+  font-size: 34px;
+  font-weight: 600;
+  color: var(--dq-window-gold);
+}
+.prompt-khmer-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.khmer-tap-audio { cursor: pointer; }
+
+.quiz-correct-reveal {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dq-window-gold);
+}
+
+.audio-btn {
+  flex-shrink: 0;
+  border: none;
+  border-radius: 999px;
+  width: 30px;
+  height: 30px;
+  font-size: 14px;
+  line-height: 1;
+  background: rgba(127, 127, 127, 0.18);
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.audio-btn:active { transform: scale(0.92); }
+.audio-btn.small {
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+}
+
+.listening-play-btn {
+  display: block;
+  width: 84px;
+  height: 84px;
+  margin: 6px auto 14px;
+  border-radius: 50%;
+  background: var(--dq-window-gold);
+  color: var(--dq-window-bg-2);
+  font-size: 36px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+.listening-play-btn:active { transform: scale(0.94); }
+.quiz-card .prompt-reading {
+  font-size: 13px;
+  color: var(--dq-window-text);
+  background: rgba(255,255,255,0.12);
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: 999px;
+  align-self: center;
+}
+.quiz-card .prompt-meaning {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dq-window-text);
+}
+.quiz-card .quiz-hint {
+  font-size: 12px;
+  color: var(--dq-window-text);
+  opacity: 0.75;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.choice-btn {
+  position: relative;
+  border: 2px solid var(--border);
+  background: var(--card);
+  border-radius: 16px;
+  padding: 14px 10px 14px 26px;
+  font-size: 15px;
+  color: var(--ink);
+  min-height: 56px;
+  text-align: left;
+}
+.choice-btn:hover:not(:disabled)::before,
+.choice-btn:focus-visible::before {
+  content: "▶";
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent-strong);
+  animation: dq-cursor-blink 0.8s steps(2) infinite;
+}
+.choice-btn.correct {
+  border-color: var(--success);
+  background: var(--success-soft);
+  color: var(--success);
+}
+.choice-btn.incorrect {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+@keyframes dq-cursor-blink { 50% { opacity: 0.15; } }
+
+.flashcard-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.flashcard-actions .know-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--success);
+}
+.flashcard-actions .dontknow-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--danger);
+}
+
+.matching-board {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 10px;
+}
+.matching-tile {
+  border: 2px solid var(--border);
+  background: var(--card);
+  border-radius: 14px;
+  padding: 12px 8px;
+  font-size: 14px;
+  text-align: center;
+  color: var(--ink);
+  min-height: 56px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.matching-tile.selected {
+  border-color: var(--accent-strong);
+  background: var(--accent-soft);
+}
+.matching-tile.matched {
+  border-color: var(--success);
+  background: var(--success-soft);
+  color: var(--success);
+  opacity: 0.65;
+}
+.matching-tile.mismatch {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.matching-tile .matching-reading {
+  display: block;
+  font-size: 10px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+.matching-tile.matched .matching-reading,
+.matching-tile.mismatch .matching-reading { color: inherit; opacity: 0.8; }
+
+.matching-tile-wrap {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+}
+.matching-tile-wrap .matching-tile { flex: 1; }
+.matching-tile-wrap .audio-btn { flex-shrink: 0; align-self: center; }
+
+.choice-audio-wrap {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+}
+.choice-audio-wrap .choice-btn { flex: 1; }
+.choice-audio-wrap .audio-btn { flex-shrink: 0; align-self: center; }
+
+.choice-reading {
+  display: block;
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+.truefalse-btn {
+  text-align: center;
+  font-weight: 700;
+  padding-left: 10px;
+}
+
+.feedback-banner {
+  text-align: center;
+  font-weight: 700;
+  padding: 10px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+}
+.feedback-banner.correct { background: var(--success-soft); color: var(--success); }
+.feedback-banner.incorrect { background: var(--danger-soft); color: var(--danger); }
+
+/* ---------- 単語一覧/図鑑 ---------- */
+.category-block { margin-bottom: 18px; }
+.category-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+.word-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.word-tile {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--border);
+  border-radius: 14px;
+  padding: 8px 10px;
+}
+.word-tile .rank-icon { position: absolute; top: 6px; right: 8px; font-size: 12px; }
+.word-tile .km-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding-right: 16px;
+}
+.word-tile.rank-1 { border-left-color: var(--ink-soft); }
+.word-tile.rank-2 { border-left-color: var(--danger); }
+.word-tile.rank-3 { border-left-color: var(--gold); }
+.word-tile.rank-4 { border-left-color: var(--accent-strong); }
+.word-tile.rank-5 { border-left-color: var(--success); }
+.word-tile .km { font-size: 17px; font-weight: 600; color: var(--ink); }
+.word-tile .reading-tag {
+  display: inline-block;
+  font-size: 10px;
+  color: var(--ink-soft);
+  background: var(--card-soft);
+  padding: 0 6px;
+  border-radius: 999px;
+  margin-top: 2px;
+}
+.word-tile .jp { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+.word-tile .core70-tag {
+  display: inline-block;
+  font-size: 9px;
+  color: var(--accent-strong);
+  border: 1px solid var(--accent-soft);
+  border-radius: 999px;
+  padding: 0 6px;
+  margin-top: 4px;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.filter-chip {
+  position: relative;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 14px 6px 14px;
+  font-size: 12px;
+  background: var(--card);
+  color: var(--ink-soft);
+}
+.filter-chip.active {
+  background: var(--accent-strong);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* ---------- 実績画面 ---------- */
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.badge-tile {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 6px;
+  text-align: center;
+}
+.badge-tile.locked { opacity: 0.35; filter: grayscale(1); }
+.badge-tile .icon { font-size: 26px; }
+.badge-tile .name { font-size: 11px; margin-top: 4px; color: var(--ink); }
+
+.title-list { display: flex; flex-direction: column; gap: 8px; }
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 14px;
+}
+.title-row.locked { opacity: 0.5; }
+.title-row .title-level {
+  font-family: 'DotGothic16', 'Zen Maru Gothic', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-strong);
+  min-width: 44px;
+}
+.title-row.reached .title-name { color: var(--ink); font-weight: 700; }
+.title-row.locked .title-name { color: var(--ink-soft); }
+
+/* ---------- 学習者切り替えオーバーレイ ---------- */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+  padding: 20px;
+}
+.modal-overlay.active { display: flex; }
+.modal-panel {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 20px;
+  width: min(340px, 100%);
+  box-shadow: var(--shadow);
+}
+.modal-panel h3 {
+  font-size: 16px;
+  margin: 0 0 12px;
+}
+.profile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+.profile-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 4px 6px;
+}
+.profile-row.current {
+  border-color: var(--accent-strong);
+  background: var(--accent-soft);
+}
+.profile-select-btn {
+  flex: 1;
+  text-align: left;
+  border: none;
+  background: none;
+  font-size: 14px;
+  color: var(--ink);
+  padding: 6px 4px;
+}
+.profile-icon-btn {
+  border: none;
+  background: none;
+  font-size: 14px;
+  padding: 4px 6px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.profile-icon-btn:hover { background: var(--card-soft); }
+
+/* ---------- 下部ナビ ---------- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.bottom-nav a {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0 8px;
+  font-size: 10px;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.bottom-nav a .icon { display: block; font-size: 18px; margin-bottom: 2px; }
+.bottom-nav a.active { color: var(--accent-strong); font-weight: 700; }
+
+/* ---------- 結果画面 ---------- */
+.result-hero {
+  text-align: center;
+  padding: 24px 10px;
+}
+.result-hero .big-xp {
+  font-size: 34px;
+  font-weight: 900;
+  color: var(--gold);
+}
+.badge-earned {
+  background: var(--gold-soft);
+  border: 1px solid var(--gold);
+  border-radius: 16px;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* ---------- レベルアップ演出 ---------- */
+.levelup-banner {
+  text-align: center;
+  margin-bottom: 14px;
+  animation: levelup-pop 0.6s ease;
+}
+.levelup-banner .levelup-title {
+  font-size: 26px;
+  font-weight: 900;
+  font-family: 'DotGothic16', 'Zen Maru Gothic', sans-serif;
+  color: var(--dq-window-gold);
+  text-shadow: 0 0 8px rgba(255, 215, 106, 0.6);
+}
+.levelup-banner .levelup-rank {
+  font-size: 14px;
+  margin-top: 6px;
+  font-weight: 700;
+}
+@keyframes levelup-pop {
+  0% { transform: scale(0.7); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ---------- 設定画面: ラジオ選択 ---------- */
+.radio-group { display: flex; flex-direction: column; gap: 8px; }
+.radio-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0 6px 16px;
+  font-size: 14px;
+}
+.radio-option:has(input:checked)::before {
+  content: "▶";
+  position: absolute;
+  left: -2px;
+  color: var(--accent-strong);
+}
+
+/* ---------- 設定画面: チップ型ラジオ選択（選択肢が多い項目を省スペースに） ---------- */
+.chip-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip-radio {
+  position: relative;
+  cursor: pointer;
+}
+.chip-radio input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.chip-radio span {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+.chip-radio input:checked + span {
+  background: var(--accent-strong);
+  color: #fff;
+  border-color: transparent;
+  font-weight: 700;
+}
+.chip-radio input:focus-visible + span {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
+@media (max-width: 360px) {
+  .quiz-card .prompt-khmer { font-size: 28px; }
+}
