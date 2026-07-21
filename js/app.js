@@ -14,6 +14,7 @@ const SCREEN_RENDERERS = {
   result: renderResultScreen,
   wordlist: renderWordlistScreen,
   achievements: renderAchievementsScreen,
+  shop: renderShopScreen,
   settings: renderSettingsScreen,
 };
 
@@ -33,6 +34,8 @@ function showScreen(screenName) {
 
   const renderer = SCREEN_RENDERERS[screenName];
   if (renderer) renderer();
+
+  tutorialOnScreenShown();
 }
 
 function currentScreenNameFromHash() {
@@ -109,11 +112,14 @@ function initApp() {
   initResultScreen();
   initWordlistScreen();
   initAchievementsScreen();
+  initShopScreen();
   initSettingsScreen();
   initProfileSwitcher();
+  initTutorial();
 
   window.addEventListener("hashchange", () => showScreen(currentScreenNameFromHash()));
   showScreen(currentScreenNameFromHash());
+  maybeShowTutorial();
 
   // ボタン全般のクリック音（正誤専用音を鳴らす選択肢・フラッシュカードボタンは除外）
   document.addEventListener("click", (e) => {
@@ -125,6 +131,7 @@ function initApp() {
     const target = e.target.closest("button, .bottom-nav a, .filter-chip");
     if (!target) return;
     if (target.closest(".choice-grid") || target.closest(".flashcard-actions") || target.closest(".matching-board")) return;
+    if (target.id === "home-start-btn") return; // 専用の出発SEを別途鳴らすため、通常のクリック音は鳴らさない
     soundPlayClick();
   });
 

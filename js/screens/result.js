@@ -27,6 +27,7 @@ function renderResultScreen() {
   }
 
   document.getElementById("result-xp").textContent = `+${r.xpEarned} XP`;
+  document.getElementById("result-gold").textContent = `+${r.goldEarned || 0} 🪙`;
   document.getElementById("result-summary").textContent =
     `${r.total}問中 ${r.correctCount}問正解`;
 
@@ -59,4 +60,38 @@ function renderResultScreen() {
   } else {
     badgesEl.innerHTML = "";
   }
+
+  renderResultWordLog(r.wordLog);
+}
+
+function renderResultWordLog(wordLog) {
+  const logEl = document.getElementById("result-word-log");
+  if (!wordLog || wordLog.length === 0) {
+    logEl.innerHTML = "";
+    return;
+  }
+  const showReading = App.user.settings.showReading;
+  logEl.innerHTML = `
+    <div class="result-log-title">今回出てきた単語（${wordLog.length}語）</div>
+    <div class="result-log">
+      ${wordLog
+        .map(({ word, isCorrect }) => {
+          const readingHtml =
+            showReading && word.reading
+              ? `<div class="result-log-reading">${readingWithIpaHtml(word)}</div>`
+              : "";
+          return `
+            <div class="result-log-item ${isCorrect ? "correct" : "incorrect"}">
+              <span class="result-log-status">${isCorrect ? "○" : "×"}</span>
+              <div class="result-log-word">
+                <div class="result-log-khmer khmer">${word.khmer}</div>
+                ${readingHtml}
+              </div>
+              <div class="result-log-meaning">${word.meaning}</div>
+            </div>
+          `;
+        })
+        .join("")}
+    </div>
+  `;
 }

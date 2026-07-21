@@ -96,6 +96,7 @@
     <div class="dq-window dq-window-frame result-hero">
       <div class="sub">おつかれさまでした！</div>
       <div class="big-xp" id="result-xp">+0 XP</div>
+      <div class="big-gold" id="result-gold">+0 🪙</div>
       <div id="result-summary" style="margin-top:8px; color:var(--dq-window-text); font-size:13px; opacity:0.85;"></div>
     </div>
 
@@ -104,6 +105,8 @@
     <button class="cta-button" id="result-again-btn">もう一度学習する</button>
     <div style="height:10px;"></div>
     <button class="secondary-button" id="result-home-btn">ホームへ戻る</button>
+
+    <div id="result-word-log"></div>
   </section>
 
   <!-- ============ 単語一覧/図鑑 ============ -->
@@ -151,10 +154,44 @@
     </div>
   </section>
 
+  <!-- ============ ショップ・コレクション画面 ============ -->
+  <section id="screen-shop" class="screen">
+    <h2>ショップ</h2>
+
+    <div class="card shop-gold-card">
+      <div class="shop-gold-label">所持ゴールド</div>
+      <div class="shop-gold-value" id="shop-gold-balance">0 🪙</div>
+    </div>
+
+    <div class="filter-row" id="shop-tabs">
+      <button class="filter-chip active" data-tab="shop">ショップ</button>
+      <button class="filter-chip" data-tab="collection">コレクション</button>
+    </div>
+
+    <div id="shop-tab-shop">
+      <div class="card gacha-pull-card">
+        <button class="cta-button" id="gacha-pull-single-btn">ガチャを1回引く（30 🪙）</button>
+        <button class="cta-button gacha-ten-btn" id="gacha-pull-ten-btn">10連ガチャを引く（300 🪙・レア以上確定）</button>
+      </div>
+
+      <div id="gacha-result"></div>
+
+      <div class="card">
+        <div class="gacha-rate-title">出現確率</div>
+        <div id="gacha-rate-table"><!-- screens/shop.js が動的に描画 --></div>
+      </div>
+    </div>
+
+    <div id="shop-tab-collection" style="display:none;">
+      <div id="shop-collection-summary"></div>
+      <div class="badge-grid" id="shop-collection-grid"><!-- screens/shop.js が動的に描画 --></div>
+    </div>
+  </section>
+
   <!-- ============ 設定画面 ============ -->
   <section id="screen-settings" class="screen">
     <h2>設定</h2>
-    <div class="card">
+    <div class="card" id="settings-toggles-card">
       <label style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
         <span>読み仮名を表示する</span>
         <input type="checkbox" id="setting-show-reading" checked>
@@ -169,7 +206,7 @@
       </label>
     </div>
 
-    <div class="card">
+    <div class="card" id="settings-scope-card">
       <div style="font-weight:700; margin-bottom:8px;">出題範囲</div>
       <div class="radio-group">
         <label class="radio-option">
@@ -183,7 +220,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="settings-session-size-card">
       <div style="font-weight:700; margin-bottom:8px;">1回の出題数</div>
       <div class="chip-radio-group" id="setting-session-size-group">
         <label class="chip-radio"><input type="radio" name="session-size" value="5"><span>5問</span></label>
@@ -195,7 +232,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="settings-daily-goal-card">
       <div style="font-weight:700; margin-bottom:8px;">1日の目標問題数</div>
       <div class="chip-radio-group" id="setting-daily-goal-group">
         <label class="chip-radio"><input type="radio" name="daily-goal" value="5"><span>5問</span></label>
@@ -226,10 +263,25 @@
   </div>
 </div>
 
+<div id="tutorial-overlay" class="tutorial-overlay">
+  <div class="tutorial-spotlight" id="tutorial-spotlight"></div>
+  <div class="tutorial-tooltip dq-window dq-window-frame" id="tutorial-tooltip">
+    <button class="tutorial-skip-btn" id="tutorial-skip-btn">スキップ</button>
+    <div class="tutorial-body" id="tutorial-body"></div>
+    <button class="cta-button tutorial-next-btn" id="tutorial-next-btn">次へ</button>
+  </div>
+</div>
+
+<div class="tutorial-complete-banner dq-window dq-window-frame" id="tutorial-complete-banner">
+  <div class="tutorial-complete-title">🎉 チュートリアル完了！</div>
+  <div class="tutorial-complete-sub">さっそく学習をはじめましょう</div>
+</div>
+
 <nav class="bottom-nav">
   <a href="#home" data-screen="home"><span class="icon">🏠</span>ホーム</a>
   <a href="#wordlist" data-screen="wordlist"><span class="icon">📖</span>図鑑</a>
   <a href="#achievements" data-screen="achievements"><span class="icon">🏅</span>実績</a>
+  <a href="#shop" data-screen="shop"><span class="icon">💰</span>ショップ</a>
   <a href="#settings" data-screen="settings"><span class="icon">⚙️</span>設定</a>
 </nav>
 
@@ -240,6 +292,7 @@
 <script src="js/word-audio.js"></script>
 <script src="js/storage.js"></script>
 <script src="js/profile-switcher.js"></script>
+<script src="js/tutorial.js"></script>
 <script src="js/srs.js"></script>
 <script src="js/quiz-engine.js"></script>
 <script src="js/gamification.js"></script>
@@ -248,6 +301,7 @@
 <script src="js/screens/result.js"></script>
 <script src="js/screens/wordlist.js"></script>
 <script src="js/screens/achievements.js"></script>
+<script src="js/screens/shop.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

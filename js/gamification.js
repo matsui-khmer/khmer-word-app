@@ -135,3 +135,92 @@ function gamCheckNewBadges(ctx) {
     (b) => !earned.includes(b.id) && b.condition(ctx)
   );
 }
+
+// ---------- ゴールド・ガチャ・コレクション ----------
+
+const GOLD_PER_CORRECT_ANSWER = 3;
+const GACHA_SINGLE_COST = 30;
+const GACHA_TEN_COST = 300;
+
+function gamCalcGoldDelta(isCorrect) {
+  return isCorrect ? GOLD_PER_CORRECT_ANSWER : 0;
+}
+
+// レアリティごとの排出重み（アイテム1つあたり）。9コモン×8 + 5レア×5 + 3エピック×1 = 100
+const ITEM_RARITY_WEIGHT = { common: 8, rare: 5, epic: 1 };
+const ITEM_RARITY_LABEL = { common: "コモン", rare: "レア", epic: "エピック" };
+
+// クメール・カンボジア文化をテーマにしたガチャアイテム
+const ITEM_DEFINITIONS = [
+  { id: "mango", name: "マンゴー", icon: "🥭", rarity: "common", desc: "カンボジア産の甘い完熟マンゴー。" },
+  { id: "cashew_nut", name: "カシューナッツ", icon: "🥜", rarity: "common", desc: "カンボジアの特産品、香ばしいカシューナッツ。" },
+  { id: "palm_sugar", name: "パームシュガー", icon: "🍯", rarity: "common", desc: "サトウヤシから作られる素朴な甘さの砂糖。" },
+  { id: "coconut_oil", name: "ココナッツオイル", icon: "🧴", rarity: "common", desc: "肌にも髪にも使えるナチュラルなオイル。" },
+  { id: "soap", name: "石鹸", icon: "🧼", rarity: "common", desc: "ハーブが練り込まれたカンボジア土産の石鹸。" },
+  { id: "tiger_balm", name: "タイガーバーム", icon: "🐅", rarity: "common", desc: "肩こりや虫刺されに。カンボジアでも定番の万能薬。" },
+  { id: "coconut_juice", name: "ココナッツジュース", icon: "🥥", rarity: "common", desc: "道端で売っている定番の一杯。飲んだ後の実も食べられる。" },
+  { id: "angkor_cookie", name: "アンコールクッキー", icon: "🍪", rarity: "common", desc: "サクサクのカンボジア土産クッキー。" },
+  { id: "angkor_beer", name: "アンコールビール", icon: "🍺", rarity: "common", desc: "定番の地元ビール。" },
+  { id: "kampot_pepper", name: "カンポットペッパー", icon: "🌶️", rarity: "rare", desc: "世界的にも評価の高いカンポット産の胡椒。" },
+  { id: "moringa_tea", name: "モリンガ茶", icon: "🍵", rarity: "rare", desc: "栄養豊富なモリンガの葉を使ったハーブティー。" },
+  { id: "dried_fruit", name: "ドライフルーツ", icon: "🍇", rarity: "rare", desc: "マンゴーやパイナップルなど南国フルーツのドライフルーツ。" },
+  { id: "krama", name: "クロマー", icon: "🧣", rarity: "rare", desc: "格子縞模様の伝統的な布。首に巻いたり日よけにしたり。" },
+  { id: "khmer_chocolate", name: "カンボジア産チョコレート", icon: "🍫", rarity: "rare", desc: "カンポット産カカオを使ったクラフトチョコレート。" },
+  { id: "tuktuk_model", name: "トゥクトゥク", icon: "🛺", rarity: "epic", desc: "街を走る三輪タクシー。ミニチュア模型でどこへでも連れて行ってくれる。" },
+  { id: "golden_naga", name: "ナーガ像", icon: "🐉", rarity: "epic", desc: "寺院の屋根を飾る聖なる蛇神ナーガの像。" },
+  { id: "angkor_wat_model", name: "アンコールワットの模型", icon: "🛕", rarity: "epic", desc: "世界遺産アンコールワットを模した精巧な模型。" },
+];
+
+function gamItemDropRatePercent(item) {
+  const totalWeight = ITEM_DEFINITIONS.reduce((sum, i) => sum + ITEM_RARITY_WEIGHT[i.rarity], 0);
+  return (ITEM_RARITY_WEIGHT[item.rarity] / totalWeight) * 100;
+}
+
+function _gamWeightedPickItem(pool) {
+  const totalWeight = pool.reduce((sum, i) => sum + ITEM_RARITY_WEIGHT[i.rarity], 0);
+  let r = Math.random() * totalWeight;
+  for (const item of pool) {
+    r -= ITEM_RARITY_WEIGHT[item.rarity];
+    if (r <= 0) return item;
+  }
+  return pool[pool.length - 1];
+}
+
+function gamGachaRollOne() {
+  return _gamWeightedPickItem(ITEM_DEFINITIONS);
+}
+
+// レア以上のみのプールから1件引く（10連ガチャの確定枠用）
+function gamGachaRollGuaranteedRareUp() {
+  return _gamWeightedPickItem(ITEM_DEFINITIONS.filter((i) => i.rarity !== "common"));
+}
+
+function _gamAwardItem(userState, item) {
+  userState.itemCounts = userState.itemCounts || {};
+  userState.itemCounts[item.id] = (userState.itemCounts[item.id] || 0) + 1;
+}
+
+// 単発ガチャ。引けなかった場合はnullを返す
+function gamGachaPullSingle(userState) {
+  if ((userState.gold || 0) < GACHA_SINGLE_COST) return null;
+  userState.gold -= GACHA_SINGLE_COST;
+  const item = gamGachaRollOne();
+  _gamAwardItem(userState, item);
+  return item;
+}
+
+// 10連ガチャ（最後の1枠はレア以上を確定）。引けなかった場合はnullを返す
+function gamGachaPullTen(userState) {
+  if ((userState.gold || 0) < GACHA_TEN_COST) return null;
+  userState.gold -= GACHA_TEN_COST;
+  const results = [];
+  for (let i = 0; i < 9; i++) {
+    const item = gamGachaRollOne();
+    _gamAwardItem(userState, item);
+    results.push(item);
+  }
+  const guaranteed = gamGachaRollGuaranteedRareUp();
+  _gamAwardItem(userState, guaranteed);
+  results.push(guaranteed);
+  return results;
+}

@@ -2,6 +2,7 @@
 
 function initHomeScreen() {
   document.getElementById("home-start-btn").addEventListener("click", () => {
+    soundPlayAdventureStart();
     startQuizSession();
     navigateTo("quiz");
   });

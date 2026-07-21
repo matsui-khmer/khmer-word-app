@@ -13,9 +13,11 @@ function startQuizSession() {
     comboCount: 0,
     maxCombo: 0,
     xpEarned: 0,
+    goldEarned: 0,
     startedNewWordIds: [],
     startLevel: App.user.level,
     startedAt: Date.now(),
+    wordLog: [],
   };
   renderQuizScreen();
 }
@@ -84,10 +86,14 @@ function renderQuizScreen() {
     const item = quizBuildMatchingItem(roundWords);
     s.currentItem = item;
     renderMatchingRound(item, cardEl, answerEl);
+    // フィードバックバナーの表示/非表示でカードの位置がずれても、
+    // カード自体のサイズが変わらない場合はResizeObserverが発火しないため、明示的に再計算する
+    tutorialOnScreenShown();
     return;
   }
 
   renderSingleWordQuestion(word, type);
+  tutorialOnScreenShown();
 }
 
 // リスニング問題を、音を出せない環境向けに別形式へ差し替える（同じ単語・同じ出題位置のまま）
@@ -119,7 +125,7 @@ function renderSingleWordQuestion(word, type) {
     cardEl.innerHTML = `
       ${khmerPromptWithAudioHtml(word)}
       ${showReading ? readingHtml : ""}
-      <div class="quiz-hint">意味を思い出せたらタップ</div>
+      <div class="quiz-hint">意味を考えてみましょう</div>
     `;
     answerEl.innerHTML = `
       <div class="flashcard-actions" id="flashcard-hidden">
@@ -131,10 +137,11 @@ function renderSingleWordQuestion(word, type) {
         "afterend",
         `<div class="prompt-meaning">${word.meaning}</div>`
       );
+      cardEl.querySelector(".quiz-hint").textContent = "意味が合っていたらタップ";
       answerEl.innerHTML = `
         <div class="flashcard-actions">
-          <button class="dontknow-btn" id="flashcard-no-btn">わからなかった</button>
-          <button class="know-btn" id="flashcard-yes-btn">わかった！</button>
+          <button class="dontknow-btn" id="flashcard-no-btn">間違っていた</button>
+          <button class="know-btn" id="flashcard-yes-btn">合っていた</button>
         </div>
       `;
       document.getElementById("flashcard-yes-btn").addEventListener("click", () => handleAnswer(true));
@@ -332,6 +339,7 @@ function finishMatchingRound() {
   const now = new Date().toISOString();
   let anyMistake = false;
   let roundXp = 0;
+  let roundGold = 0;
 
   words.forEach((word) => {
     const isCorrect = !mistakes.has(word.id);
@@ -345,6 +353,7 @@ function finishMatchingRound() {
     if (isCorrect) s.correctCount++;
     if (isNewWord) s.startedNewWordIds.push(word.id);
     App.user.totalAnsweredCount = (App.user.totalAnsweredCount || 0) + 1;
+    s.wordLog.push({ word, isCorrect });
 
     roundXp += gamCalcXpDelta({
       isCorrect,
@@ -352,6 +361,8 @@ function finishMatchingRound() {
       comboCount: 0,
       isComeback: isCorrect && wasStruggling,
     });
+    roundGold += gamCalcGoldDelta(isCorrect);
+    tutorialNotifyAnswered();
   });
 
   saveProgress(App.progress);
@@ -359,7 +370,9 @@ function finishMatchingRound() {
   s.comboCount = anyMistake ? 0 : s.comboCount + words.length;
   s.maxCombo = Math.max(s.maxCombo, s.comboCount);
   s.xpEarned += roundXp;
+  s.goldEarned += roundGold;
   App.user.xp += roundXp;
+  App.user.gold = (App.user.gold || 0) + roundGold;
   App.user.level = gamCalcLevel(App.user.xp);
 
   showFeedbackBanner(!anyMistake, roundXp);
@@ -403,6 +416,7 @@ function handleAnswer(isCorrect) {
   if (isCorrect) s.correctCount++;
   if (isNewWord) s.startedNewWordIds.push(word.id);
   App.user.totalAnsweredCount = (App.user.totalAnsweredCount || 0) + 1;
+  s.wordLog.push({ word, isCorrect });
 
   const xpDelta = gamCalcXpDelta({
     isCorrect,
@@ -414,10 +428,15 @@ function handleAnswer(isCorrect) {
   App.user.xp += xpDelta;
   App.user.level = gamCalcLevel(App.user.xp);
 
+  const goldDelta = gamCalcGoldDelta(isCorrect);
+  s.goldEarned += goldDelta;
+  App.user.gold = (App.user.gold || 0) + goldDelta;
+
   if (isCorrect) soundPlayCorrect();
   else soundPlayIncorrect();
 
   showFeedbackBanner(isCorrect, xpDelta);
+  tutorialNotifyAnswered();
 
   setTimeout(() => {
     s.index++;
@@ -459,6 +478,7 @@ function finishQuizSession() {
 
   App.lastResult = {
     xpEarned: s.xpEarned,
+    goldEarned: s.goldEarned,
     total: s.queue.length,
     correctCount: s.correctCount,
     newBadges,
@@ -466,6 +486,7 @@ function finishQuizSession() {
     titleChanged,
     newLevel: App.user.level,
     newRankTitle,
+    wordLog: s.wordLog,
   };
   App.session = null;
   navigateTo("result");

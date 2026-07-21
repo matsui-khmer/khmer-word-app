@@ -20,6 +20,9 @@ const DEFAULT_USER_STATE = {
   badges: [],
   totalSessionsCompleted: 0,
   dailyProgress: { date: null, count: 0 },
+  gold: 0,
+  itemCounts: {},
+  hasSeenTutorial: false,
   settings: {
     showReading: true,
     enableJpToKm: true,
@@ -122,9 +125,15 @@ function loadUserState() {
     const raw = localStorage.getItem(STORAGE_KEYS.userPrefix + id);
     if (!raw) return structuredCloneUserState();
     const parsed = JSON.parse(raw);
-    return Object.assign(structuredCloneUserState(), parsed, {
+    const merged = Object.assign(structuredCloneUserState(), parsed, {
       settings: Object.assign({}, DEFAULT_USER_STATE.settings, parsed.settings),
     });
+    // totalStudyDaysは後から追加した項目のため、それ以前からのデータでは
+    // 「連続日数はあるのに累計日数が0のまま」になりうる。連続日数を下限として補正する
+    if ((merged.totalStudyDays || 0) < (merged.streakDays || 0)) {
+      merged.totalStudyDays = merged.streakDays;
+    }
+    return merged;
   } catch (e) {
     return structuredCloneUserState();
   }

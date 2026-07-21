@@ -80,6 +80,20 @@ function soundPlayBadge() {
   ]);
 }
 
+// 「今日の学習をはじめる」を押した時の、冒険・ダンジョンへ出発するようなSE
+function soundPlayAdventureStart() {
+  _soundPlayNotes([
+    // 扉を開ける・一歩踏み出すような低い一打
+    { freq: 98, start: 0, duration: 0.16, gain: 0.2, type: "square" },
+    { freq: 65.41, start: 0.02, duration: 0.16, gain: 0.14, type: "sawtooth" },
+    // 出発を告げる勇ましい上昇フレーズ
+    { freq: 392.0, start: 0.14, duration: 0.1, gain: 0.14, type: "square" },
+    { freq: 523.25, start: 0.24, duration: 0.1, gain: 0.14, type: "square" },
+    { freq: 659.25, start: 0.34, duration: 0.11, gain: 0.15, type: "square" },
+    { freq: 784.0, start: 0.45, duration: 0.32, gain: 0.17, type: "square" },
+  ]);
+}
+
 // セッション完走時の爽快なファンファーレ（結果画面表示時）
 function soundPlaySessionComplete() {
   _soundPlayNotes([

@@ -28,6 +28,7 @@ function afterProfileChange() {
   closeProfileSwitcher();
   window.location.hash = "#home";
   showScreen("home");
+  maybeShowTutorial();
 }
 
 function renderProfileList() {

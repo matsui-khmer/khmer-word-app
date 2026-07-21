@@ -225,6 +225,7 @@ button {
 }
 .hero.dq-window h1 {
   color: var(--dq-window-gold);
+  text-shadow: 0 0 12px rgba(232, 198, 90, 0.8), 0 2px 0 rgba(0, 0, 0, 0.45);
 }
 .hero.dq-window .sub { color: var(--dq-window-text); opacity: 0.85; }
 .hero.dq-window .rank-title {
@@ -316,10 +317,12 @@ button {
   border: 2px solid var(--border);
 }
 .hero h1 {
-  font-size: 22px;
+  font-size: 34px;
   font-family: 'DotGothic16', 'Zen Maru Gothic', sans-serif;
   color: var(--accent-strong);
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  margin: 6px 0 8px;
+  line-height: 1.25;
 }
 .hero .sub {
   font-size: 13px;
@@ -500,11 +503,12 @@ button {
 }
 .listening-play-btn:active { transform: scale(0.94); }
 .quiz-card .prompt-reading {
-  font-size: 13px;
+  font-size: 19px;
+  font-weight: 700;
   color: var(--dq-window-text);
   background: rgba(255,255,255,0.12);
   display: inline-block;
-  padding: 2px 12px;
+  padding: 4px 16px;
   border-radius: 999px;
   align-self: center;
 }
@@ -616,8 +620,9 @@ button {
 }
 .matching-tile .matching-reading {
   display: block;
-  font-size: 10px;
-  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
   margin-top: 2px;
 }
 .matching-tile.matched .matching-reading,
@@ -641,15 +646,16 @@ button {
 
 .choice-reading {
   display: block;
-  font-size: 11px;
-  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
   margin-top: 2px;
 }
 
 .ipa-tag {
   font-family: 'Noto Sans', 'Segoe UI', sans-serif;
-  font-style: italic;
-  opacity: 0.75;
+  font-weight: 700;
+  opacity: 0.9;
 }
 
 .truefalse-btn {
@@ -706,10 +712,11 @@ button {
 .word-tile .km { font-size: 17px; font-weight: 600; color: var(--ink); }
 .word-tile .reading-tag {
   display: inline-block;
-  font-size: 10px;
-  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
   background: var(--card-soft);
-  padding: 0 6px;
+  padding: 1px 8px;
   border-radius: 999px;
   margin-top: 2px;
 }
@@ -763,6 +770,90 @@ button {
 .badge-tile .icon { font-size: 26px; }
 .badge-tile .name { font-size: 11px; margin-top: 4px; color: var(--ink); }
 
+.shop-gold-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.shop-gold-label { font-size: 13px; color: var(--ink-soft); }
+.shop-gold-value { font-size: 24px; font-weight: 900; color: var(--gold); }
+
+.shop-item-rarity {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: 999px;
+}
+.shop-item-rarity.rarity-common { background: var(--card-soft); color: var(--ink-soft); }
+.shop-item-rarity.rarity-rare { background: var(--accent-soft); color: var(--accent-strong); }
+.shop-item-rarity.rarity-epic { background: var(--gold-soft); color: var(--gold); }
+
+.gacha-pull-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.gacha-pull-card .cta-button {
+  padding: 12px;
+  font-size: 15px;
+}
+.gacha-ten-btn { background: var(--gold); }
+
+.gacha-result-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.gacha-result-tile {
+  position: relative;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 4px 6px;
+  text-align: center;
+}
+.gacha-result-tile.rarity-rare { border-color: var(--accent-strong); }
+.gacha-result-tile.rarity-epic {
+  border-color: var(--gold);
+  box-shadow: 0 0 10px rgba(201, 151, 31, 0.5);
+}
+.gacha-result-tile .icon { font-size: 26px; }
+.gacha-result-tile .name { font-size: 10px; margin-top: 2px; color: var(--ink); }
+.gacha-result-tile .rarity-label { font-size: 9px; color: var(--ink-soft); margin-top: 1px; }
+.gacha-new-badge {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 900;
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+.gacha-rate-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+.gacha-rate-row { margin-bottom: 10px; }
+.gacha-rate-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+.gacha-rate-percent { font-size: 12px; color: var(--ink-soft); }
+.gacha-rate-names { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+
+.collection-summary {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.badge-tile.item-tile .item-count { font-size: 11px; font-weight: 700; color: var(--gold); margin-top: 2px; }
+.badge-tile.item-tile .item-desc { font-size: 10px; color: var(--ink-soft); margin-top: 3px; line-height: 1.4; }
+
 .title-list { display: flex; flex-direction: column; gap: 8px; }
 .title-row {
   display: flex;
@@ -806,6 +897,96 @@ button {
 .modal-panel h3 {
   font-size: 16px;
   margin: 0 0 12px;
+}
+
+/* 実際の画面を操作しながら進めるチュートリアル（対象要素だけ明るく見せるスポットライト演出） */
+.tutorial-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+}
+.tutorial-overlay.active { display: block; }
+
+.tutorial-spotlight {
+  position: fixed;
+  border-radius: 14px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.62);
+  /* top/left/width/heightは常に即座に反映する。位置だけアニメーションさせると、
+     高さは新しい値のまま位置だけ古い値というズレた瞬間が生まれ、
+     実際の問題内容が枠に収まりきらなくなる場面があったため */
+  pointer-events: none;
+}
+
+.tutorial-tooltip {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 16px 18px;
+  pointer-events: auto;
+}
+.tutorial-skip-btn {
+  float: right;
+  margin: -4px -6px 6px 16px;
+  background: none;
+  border: none;
+  color: var(--dq-window-text);
+  opacity: 0.75;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 6px;
+}
+.tutorial-body {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--dq-window-text);
+  margin-bottom: 14px;
+}
+.tutorial-nowrap { white-space: nowrap; }
+.tutorial-next-btn { clear: both; padding: 11px; font-size: 14px; }
+
+.tutorial-complete-banner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: max-content;
+  max-width: min(300px, calc(100vw - 48px));
+  box-sizing: border-box;
+  transform: translate(-50%, -50%) scale(0.7);
+  z-index: 80;
+  padding: 22px 30px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+.tutorial-complete-banner.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+  animation: tutorial-complete-pop 0.5s ease;
+}
+@keyframes tutorial-complete-pop {
+  0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+  60% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+.tutorial-complete-title {
+  font-size: 22px;
+  font-weight: 900;
+  font-family: 'DotGothic16', 'Zen Maru Gothic', sans-serif;
+  color: var(--dq-window-gold);
+  text-shadow: 0 0 8px rgba(255, 215, 106, 0.6);
+  white-space: nowrap;
+}
+.tutorial-complete-sub {
+  font-size: 13px;
+  margin-top: 8px;
+  color: var(--dq-window-text);
 }
 .profile-list {
   display: flex;
@@ -877,6 +1058,12 @@ button {
   font-weight: 900;
   color: var(--gold);
 }
+.result-hero .big-gold {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-top: 2px;
+}
 .badge-earned {
   background: var(--gold-soft);
   border: 1px solid var(--gold);
@@ -884,6 +1071,49 @@ button {
   padding: 10px;
   text-align: center;
   margin-bottom: 10px;
+}
+
+.result-log-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 16px 4px 8px;
+}
+.result-log {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.result-log-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  background: var(--card);
+}
+.result-log-item.correct { border-color: var(--success); background: var(--success-soft); }
+.result-log-item.incorrect { border-color: var(--danger); background: var(--danger-soft); }
+.result-log-status {
+  flex-shrink: 0;
+  width: 22px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 900;
+}
+.result-log-item.correct .result-log-status { color: var(--success); }
+.result-log-item.incorrect .result-log-status { color: var(--danger); }
+.result-log-word { flex: 1; min-width: 0; }
+.result-log-khmer { font-size: 15px; font-weight: 600; color: var(--ink); }
+.result-log-reading { font-size: 12px; color: var(--ink-soft); margin-top: 1px; }
+.result-log-meaning {
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-align: right;
+  max-width: 40%;
+  flex-shrink: 0;
 }
 
 /* ---------- レベルアップ演出 ---------- */
