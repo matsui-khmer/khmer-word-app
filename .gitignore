@@ -9,3 +9,6 @@ _versions/
 2025年版重要単語ver2.pdf
 確認用_単語一覧.html
 重要単語.csv
+
+# 発音記号(IPA)入力用の作業ファイル（記入後、data/words.jsのKHMER_IPAへ反映する）
+IPA入力用.csv

@@ -112,7 +112,7 @@ function renderSingleWordQuestion(word, type) {
   const showReading = App.user.settings.showReading;
   const readingHtml =
     item.type !== "jp2km" && word.reading
-      ? `<div class="prompt-reading">${word.reading}</div>`
+      ? `<div class="prompt-reading">${readingWithIpaHtml(word)}</div>`
       : "";
 
   if (item.type === "flashcard") {
@@ -200,7 +200,7 @@ function renderSingleWordQuestion(word, type) {
             isKhmerChoice && showReading
               ? (() => {
                   const cw = App.words.find((w) => w.id === c.wordId);
-                  return cw && cw.reading ? `<span class="choice-reading">${cw.reading}</span>` : "";
+                  return cw && cw.reading ? `<span class="choice-reading">${readingWithIpaHtml(cw)}</span>` : "";
                 })()
               : "";
           const choiceBtnHtml = `<button class="choice-btn ${isKhmerChoice ? "khmer" : ""}" data-index="${i}">${c.label}${choiceReadingHtml}</button>`;
@@ -257,7 +257,7 @@ function renderMatchingRound(item, cardEl, answerEl) {
       const mw = App.words.find((x) => x.id === meaningId);
       const readingHtml =
         App.user.settings.showReading && kw.reading
-          ? `<span class="matching-reading">${kw.reading}</span>`
+          ? `<span class="matching-reading">${readingWithIpaHtml(kw)}</span>`
           : "";
       const khmerTileHtml = `<button class="matching-tile" data-side="khmer" data-id="${khmerId}"><span class="khmer">${kw.khmer}</span>${readingHtml}</button>`;
       const khmerCellHtml = hasWordAudio(khmerId)

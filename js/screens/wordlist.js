@@ -50,7 +50,7 @@ function renderWordlistScreen() {
           const rank = srsComprehensionRank(record);
           const rankMeta = SRS_COMPREHENSION_RANK_META[rank];
           const readingHtml = word.reading
-            ? `<div class="reading-tag">${word.reading}</div>`
+            ? `<div class="reading-tag">${readingWithIpaHtml(word)}</div>`
             : "";
           const audioBtnHtml = hasWordAudio(word.id)
             ? `<button class="audio-btn small" data-audio="${word.id}" aria-label="発音を聞く">🔊</button>`

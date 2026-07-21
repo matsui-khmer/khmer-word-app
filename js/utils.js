@@ -42,3 +42,10 @@ function formatStudyMinutes(totalMinutes) {
   const h = Math.floor(m / 60);
   return h > 0 ? `${h}時間${m % 60}分` : `${m % 60}分`;
 }
+
+// カタカナ読み＋（あれば）発音記号(IPA)をまとめて表示するためのHTML断片を作る
+function readingWithIpaHtml(word) {
+  if (!word.reading) return "";
+  const ipaHtml = word.ipa ? ` <span class="ipa-tag">[${word.ipa}]</span>` : "";
+  return `${word.reading}${ipaHtml}`;
+}

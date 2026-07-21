@@ -646,6 +646,12 @@ button {
   margin-top: 2px;
 }
 
+.ipa-tag {
+  font-family: 'Noto Sans', 'Segoe UI', sans-serif;
+  font-style: italic;
+  opacity: 0.75;
+}
+
 .truefalse-btn {
   text-align: center;
   font-weight: 700;

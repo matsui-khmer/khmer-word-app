@@ -2,6 +2,7 @@
 // 出典: 2025年版重要単語ver2.pdf / 2025年版重要単語.docx
 // reading（カタカナ読み）は下書き（draft）です。クメール語講師ご本人による確認・修正を前提としています。
 // readingStatus: "missing" | "draft" | "confirmed"
+// ipa（発音記号）はクメール語講師ご本人が単語ごとに入力する想定。未入力の単語は空文字のまま（表示されない）
 
 const KHMER_CATEGORY_ORDER = {
   "ក": 1, "ខ": 2, "គ": 3, "ឃ": 4, "ង": 5,
@@ -344,9 +345,14 @@ const _RAW_WORDS = [
   _mk("ឲ្យ", "アオイ", "与える、～させる", "独立体母音字"),
 ];
 
+// 単語IDごとの発音記号(IPA)。ここに入っている単語だけカタカナ読みと併記表示される
+// （「IPA入力用.csv」に記入したものをここへ反映する運用）
+const KHMER_IPA = {};
+
 // 全258語、クメール語講師ご本人による確認が完了済み（2026-07-19時点）
 const KHMER_WORDS = _RAW_WORDS.map((w, i) => {
   w.id = "w" + String(i + 1).padStart(3, "0");
   w.readingStatus = "confirmed";
+  w.ipa = KHMER_IPA[w.id] || "";
   return w;
 });
