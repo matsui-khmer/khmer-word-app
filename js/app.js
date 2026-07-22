@@ -106,11 +106,30 @@ function renderSettingsScreen() {
   document.getElementById("setting-version-info").textContent = `バージョン ${APP_VERSION}（${APP_VERSION_DATE}）`;
 }
 
+function shareApp(e) {
+  const btn = e.currentTarget;
+  const text = "クメール語の単語を無料で覚えられるアプリです📚 一緒に勉強しませんか？";
+  const shareUrl = location.origin + location.pathname;
+
+  if (navigator.share) {
+    navigator.share({ text, url: shareUrl }).catch(() => {});
+    return;
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    const original = btn.textContent;
+    navigator.clipboard.writeText(`${text}\n${shareUrl}`)
+      .then(() => { btn.textContent = "コピーしました！"; })
+      .catch(() => { btn.textContent = "コピーできませんでした"; })
+      .finally(() => { setTimeout(() => { btn.textContent = original; }, 2000); });
+  }
+}
+
 function initApp() {
   App.progress = loadProgress();
   App.user = loadUserState();
 
   document.querySelectorAll("[data-line-cta]").forEach((el) => { el.href = LINE_ADD_FRIEND_URL; });
+  document.querySelectorAll(".app-share-btn").forEach((btn) => btn.addEventListener("click", shareApp));
 
   initHomeScreen();
   initQuizScreen();

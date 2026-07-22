@@ -17,32 +17,6 @@ function initResultScreen() {
   document.getElementById("result-home-btn").addEventListener("click", () => {
     navigateTo("home");
   });
-  document.getElementById("result-share-btn").addEventListener("click", shareResult);
-}
-
-function shareResult() {
-  const r = App.lastResult;
-  if (!r) return;
-
-  const lines = [`クメール語単語アプリで${r.total}問中${r.correctCount}問正解しました！📚`];
-  if (r.leveledUp) lines.push(`レベル${r.newLevel}に到達しました🎉`);
-  if (r.newBadges && r.newBadges.length > 0) lines.push(`「${r.newBadges[0].name}」バッジを獲得！`);
-  lines.push("一緒にクメール語を覚えませんか？");
-  const text = lines.join("\n");
-  const shareUrl = location.origin + location.pathname;
-
-  if (navigator.share) {
-    navigator.share({ text, url: shareUrl }).catch(() => {});
-    return;
-  }
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    const btn = document.getElementById("result-share-btn");
-    const original = btn.textContent;
-    navigator.clipboard.writeText(`${text}\n${shareUrl}`)
-      .then(() => { btn.textContent = "コピーしました！"; })
-      .catch(() => { btn.textContent = "コピーできませんでした"; })
-      .finally(() => { setTimeout(() => { btn.textContent = original; }, 2000); });
-  }
 }
 
 function renderResultScreen() {
