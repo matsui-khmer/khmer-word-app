@@ -429,6 +429,22 @@ button {
   background: var(--card);
 }
 
+/* ---------- レッスン集客用LINE導線 ---------- */
+.line-cta {
+  text-align: center;
+}
+.line-cta-text {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+.line-cta-link {
+  display: inline-block;
+  line-height: 0;
+}
+.line-cta-link img { vertical-align: middle; }
+
 /* ---------- クイズ画面 ---------- */
 .quiz-progress {
   display: flex;

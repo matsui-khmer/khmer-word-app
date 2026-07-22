@@ -1,5 +1,8 @@
 // アプリ全体の状態管理・画面ルーティング・初期化
 
+// アプリ経由の友だち追加を計測するための専用LINEリンク（「WEBアプリ」名義）
+const LINE_ADD_FRIEND_URL = "https://lin.ee/Uh19DGi";
+
 const App = {
   words: KHMER_WORDS,
   progress: null,
@@ -106,6 +109,8 @@ function renderSettingsScreen() {
 function initApp() {
   App.progress = loadProgress();
   App.user = loadUserState();
+
+  document.querySelectorAll("[data-line-cta]").forEach((el) => { el.href = LINE_ADD_FRIEND_URL; });
 
   initHomeScreen();
   initQuizScreen();
