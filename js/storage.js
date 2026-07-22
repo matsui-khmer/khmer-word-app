@@ -22,6 +22,7 @@ const DEFAULT_USER_STATE = {
   dailyProgress: { date: null, count: 0 },
   gold: 0,
   itemCounts: {},
+  grammarProgress: {},
   hasSeenTutorial: false,
   settings: {
     showReading: true,

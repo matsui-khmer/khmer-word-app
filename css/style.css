@@ -1064,6 +1064,28 @@ button {
 .bottom-nav a .icon { display: block; font-size: 18px; margin-bottom: 2px; }
 .bottom-nav a.active { color: var(--accent-strong); font-weight: 700; }
 
+/* ---------- 文法画面 ---------- */
+.grammar-topic-tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  border-left: 5px solid var(--border);
+}
+.grammar-topic-tile.completed { border-left-color: var(--success); }
+.grammar-topic-tile .grammar-topic-icon { font-size: 24px; }
+.grammar-topic-tile .grammar-topic-order { font-size: 11px; color: var(--ink-soft); }
+.grammar-topic-tile .grammar-topic-title { font-size: 15px; font-weight: 700; color: var(--ink); }
+.grammar-topic-tile .grammar-topic-status { margin-left: auto; font-size: 11px; color: var(--ink-soft); white-space: nowrap; }
+.grammar-topic-tile.completed .grammar-topic-status { color: var(--success); font-weight: 700; }
+
+.grammar-card .grammar-rule { font-size: 14px; line-height: 1.7; color: var(--dq-window-text); }
+.grammar-card .grammar-example { margin-top: 12px; background: rgba(0, 0, 0, 0.18); border-radius: 12px; padding: 12px 14px; }
+.grammar-card .grammar-khmer { font-family: 'Noto Sans Khmer', sans-serif; font-size: 22px; color: var(--dq-window-gold); margin-bottom: 6px; }
+.grammar-card .grammar-reading { font-size: 13px; font-weight: 700; color: var(--dq-window-text); margin-bottom: 4px; }
+.grammar-card .grammar-breakdown { font-size: 12px; color: var(--dq-window-text); opacity: 0.75; margin-bottom: 6px; }
+.grammar-card .grammar-translation { font-size: 14px; font-weight: 700; color: var(--dq-window-text); }
+
 /* ---------- 結果画面 ---------- */
 .result-hero {
   text-align: center;

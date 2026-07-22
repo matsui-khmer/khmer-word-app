@@ -12,3 +12,6 @@ _versions/
 
 # 発音記号(IPA)入力用の作業ファイル（記入後、data/words.jsのKHMER_IPAへ反映する）
 IPA入力用.csv
+
+# 文法機能の元資料（PPTX/PDF/講義動画。data/grammar.jsへ反映済みのため公開リポジトリには不要）
+文法/

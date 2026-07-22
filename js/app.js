@@ -16,6 +16,7 @@ const SCREEN_RENDERERS = {
   quiz: null, // startQuizSession()内で描画するためここでは何もしない
   result: renderResultScreen,
   wordlist: renderWordlistScreen,
+  grammar: renderGrammarScreen,
   achievements: renderAchievementsScreen,
   shop: renderShopScreen,
   settings: renderSettingsScreen,
@@ -135,6 +136,7 @@ function initApp() {
   initQuizScreen();
   initResultScreen();
   initWordlistScreen();
+  initGrammarScreen();
   initAchievementsScreen();
   initShopScreen();
   initSettingsScreen();
