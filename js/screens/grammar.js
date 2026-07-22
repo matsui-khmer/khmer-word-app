@@ -1,15 +1,22 @@
-// 文法画面（一覧・解説カード・クイズ・結果）
+// 文法画面（一覧・解説カード・4択クイズ・並び替えクイズ・結果）
 
 const GRAMMAR_QUIZ_PASS_RATIO = 0.6;
+const GRAMMAR_XP_PER_CORRECT = 8;
 
 let grammarCurrentTopicId = null;
 let grammarQuizState = null; // { queue: [...], index, correctCount, xpEarned, goldEarned }
+let grammarReorderState = null; // { queue: [...], index, correctCount, xpEarned, goldEarned, tokens, bankIndices, placedIndices }
+let grammarResultRetryAction = null; // 結果画面の「もう一度挑戦する」が呼ぶ関数
 
 function initGrammarScreen() {
   document.getElementById("grammar-topic-list").addEventListener("click", (e) => {
     const tile = e.target.closest(".grammar-topic-tile");
     if (!tile) return;
     openGrammarTopic(tile.dataset.topicId);
+  });
+
+  document.getElementById("grammar-challenge-btn").addEventListener("click", () => {
+    startGrammarReorderChallenge();
   });
 
   document.getElementById("grammar-back-to-list-btn").addEventListener("click", () => {
@@ -20,8 +27,16 @@ function initGrammarScreen() {
     startGrammarQuiz(grammarCurrentTopicId);
   });
 
+  document.getElementById("grammar-start-reorder-btn").addEventListener("click", () => {
+    startGrammarReorder(grammarCurrentTopicId);
+  });
+
+  document.getElementById("grammar-reorder-reset-btn").addEventListener("click", () => {
+    resetGrammarReorderPlacement();
+  });
+
   document.getElementById("grammar-result-retry-btn").addEventListener("click", () => {
-    startGrammarQuiz(grammarCurrentTopicId);
+    if (grammarResultRetryAction) grammarResultRetryAction();
   });
 
   document.getElementById("grammar-result-back-btn").addEventListener("click", () => {
@@ -30,7 +45,7 @@ function initGrammarScreen() {
 }
 
 function showGrammarView(viewName) {
-  ["list", "detail", "quiz", "result"].forEach((name) => {
+  ["list", "detail", "quiz", "reorder", "result"].forEach((name) => {
     document.getElementById("grammar-" + name + "-view").style.display = name === viewName ? "" : "none";
   });
 }
@@ -93,6 +108,8 @@ function openGrammarTopic(topicId) {
   showGrammarView("detail");
 }
 
+// ---------- 4択クイズ ----------
+
 function startGrammarQuiz(topicId) {
   const topic = getGrammarTopic(topicId);
   const queue = shuffle(topic.quiz).map((q) => {
@@ -150,12 +167,10 @@ function handleGrammarAnswer(isCorrect) {
 
   if (isCorrect) {
     s.correctCount++;
-    const xpDelta = 8;
-    const goldDelta = GOLD_PER_CORRECT_ANSWER;
-    s.xpEarned += xpDelta;
-    s.goldEarned += goldDelta;
-    App.user.xp += xpDelta;
-    App.user.gold = (App.user.gold || 0) + goldDelta;
+    s.xpEarned += GRAMMAR_XP_PER_CORRECT;
+    s.goldEarned += GOLD_PER_CORRECT_ANSWER;
+    App.user.xp += GRAMMAR_XP_PER_CORRECT;
+    App.user.gold = (App.user.gold || 0) + GOLD_PER_CORRECT_ANSWER;
     App.user.level = gamCalcLevel(App.user.xp);
   }
 
@@ -193,7 +208,7 @@ function finishGrammarQuiz() {
 
   const topic = getGrammarTopic(grammarCurrentTopicId);
   document.getElementById("grammar-result-hero").innerHTML = `
-    <div class="sub">「${topic.title}」の結果</div>
+    <div class="sub">「${topic.title}」の4択クイズ結果</div>
     <div class="big-xp">${s.correctCount} / ${total} 問正解</div>
     <div class="big-gold">+${s.xpEarned} XP　+${s.goldEarned} 🪙</div>
     <div style="margin-top:8px; color:var(--dq-window-text); font-size:13px; opacity:0.85;">
@@ -201,5 +216,169 @@ function finishGrammarQuiz() {
     </div>
   `;
 
+  grammarResultRetryAction = () => startGrammarQuiz(grammarCurrentTopicId);
+  showGrammarView("result");
+}
+
+// ---------- 並び替えクイズ ----------
+
+function buildGrammarReorderItem(topic) {
+  return {
+    topicTitle: topic.title,
+    translation: topic.reorder.translation,
+    tokens: topic.reorder.khmer.split(/\s+/).filter(Boolean),
+  };
+}
+
+function startGrammarReorder(topicId) {
+  const topic = getGrammarTopic(topicId);
+  grammarReorderState = {
+    queue: [buildGrammarReorderItem(topic)],
+    index: 0,
+    correctCount: 0,
+    xpEarned: 0,
+    goldEarned: 0,
+    isChallenge: false,
+  };
+  showGrammarView("reorder");
+  renderGrammarReorderQuestion();
+}
+
+function startGrammarReorderChallenge() {
+  const queue = shuffle(GRAMMAR_TOPICS).map((topic) => buildGrammarReorderItem(topic));
+  grammarReorderState = {
+    queue,
+    index: 0,
+    correctCount: 0,
+    xpEarned: 0,
+    goldEarned: 0,
+    isChallenge: true,
+  };
+  showGrammarView("reorder");
+  renderGrammarReorderQuestion();
+}
+
+function renderGrammarReorderQuestion() {
+  const s = grammarReorderState;
+  document.getElementById("grammar-reorder-feedback-banner").innerHTML = "";
+
+  const total = s.queue.length;
+  document.getElementById("grammar-reorder-progress-label").textContent = `${s.index + 1} / ${total}`;
+  document.getElementById("grammar-reorder-progress-bar").style.width = `${(s.index / total) * 100}%`;
+
+  const item = s.queue[s.index];
+  const titlePrefix = s.isChallenge ? `【${item.topicTitle}】` : "";
+  document.getElementById("grammar-reorder-hint").textContent = `${titlePrefix}次の意味になるように、下の単語を正しい順番にタップしてください：「${item.translation}」`;
+
+  s.tokens = item.tokens;
+  s.placedIndices = [];
+  s.bankIndices = shuffle(item.tokens.map((_, i) => i));
+  s.answered = false;
+
+  renderGrammarReorderChips();
+}
+
+function renderGrammarReorderChips() {
+  const s = grammarReorderState;
+
+  document.getElementById("grammar-reorder-answer").innerHTML = s.placedIndices
+    .map((tokenIndex, pos) => `<button class="reorder-chip in-answer khmer" data-pos="${pos}">${s.tokens[tokenIndex]}</button>`)
+    .join("");
+  document.getElementById("grammar-reorder-bank").innerHTML = s.bankIndices
+    .map((tokenIndex) => `<button class="reorder-chip in-bank khmer" data-token-index="${tokenIndex}">${s.tokens[tokenIndex]}</button>`)
+    .join("");
+
+  document.querySelectorAll("#grammar-reorder-answer .reorder-chip").forEach((btn) => {
+    btn.addEventListener("click", () => moveGrammarReorderChipToBank(Number(btn.dataset.pos)));
+  });
+  document.querySelectorAll("#grammar-reorder-bank .reorder-chip").forEach((btn) => {
+    btn.addEventListener("click", () => moveGrammarReorderChipToAnswer(Number(btn.dataset.tokenIndex)));
+  });
+}
+
+function moveGrammarReorderChipToAnswer(tokenIndex) {
+  const s = grammarReorderState;
+  if (s.answered) return;
+  s.bankIndices = s.bankIndices.filter((i) => i !== tokenIndex);
+  s.placedIndices.push(tokenIndex);
+  renderGrammarReorderChips();
+
+  if (s.bankIndices.length === 0) {
+    checkGrammarReorderAnswer();
+  }
+}
+
+function moveGrammarReorderChipToBank(pos) {
+  const s = grammarReorderState;
+  if (s.answered) return;
+  const tokenIndex = s.placedIndices[pos];
+  s.placedIndices.splice(pos, 1);
+  s.bankIndices.push(tokenIndex);
+  renderGrammarReorderChips();
+}
+
+function resetGrammarReorderPlacement() {
+  const s = grammarReorderState;
+  if (!s || s.answered) return;
+  s.bankIndices = shuffle(s.tokens.map((_, i) => i));
+  s.placedIndices = [];
+  renderGrammarReorderChips();
+}
+
+function checkGrammarReorderAnswer() {
+  const s = grammarReorderState;
+  s.answered = true;
+  const isCorrect = s.placedIndices.every((tokenIndex, pos) => tokenIndex === pos);
+  const item = s.queue[s.index];
+
+  document.querySelectorAll("#grammar-reorder-answer .reorder-chip").forEach((btn) => {
+    btn.classList.add(isCorrect ? "correct" : "incorrect");
+  });
+
+  if (isCorrect) {
+    s.correctCount++;
+    s.xpEarned += GRAMMAR_XP_PER_CORRECT;
+    s.goldEarned += GOLD_PER_CORRECT_ANSWER;
+    App.user.xp += GRAMMAR_XP_PER_CORRECT;
+    App.user.gold = (App.user.gold || 0) + GOLD_PER_CORRECT_ANSWER;
+    App.user.level = gamCalcLevel(App.user.xp);
+    soundPlayCorrect();
+  } else {
+    soundPlayIncorrect();
+  }
+
+  const banner = document.getElementById("grammar-reorder-feedback-banner");
+  banner.innerHTML = `
+    <div class="feedback-banner ${isCorrect ? "correct" : "incorrect"}">${isCorrect ? "正解！" : "おしい！"}</div>
+    ${isCorrect ? "" : `<div class="reorder-correct-answer">${item.tokens.join(" ")}</div>`}
+  `;
+
+  setTimeout(() => {
+    s.index++;
+    if (s.index >= s.queue.length) {
+      finishGrammarReorderQueue();
+    } else {
+      renderGrammarReorderQuestion();
+    }
+  }, isCorrect ? 900 : 1800);
+}
+
+function finishGrammarReorderQueue() {
+  const s = grammarReorderState;
+  const total = s.queue.length;
+
+  saveUserState(App.user);
+  soundPlaySessionComplete();
+
+  const titleText = s.isChallenge ? "総合並び替えチャレンジの結果" : `「${getGrammarTopic(grammarCurrentTopicId).title}」の並び替えクイズ結果`;
+  document.getElementById("grammar-result-hero").innerHTML = `
+    <div class="sub">${titleText}</div>
+    <div class="big-xp">${s.correctCount} / ${total} 問正解</div>
+    <div class="big-gold">+${s.xpEarned} XP　+${s.goldEarned} 🪙</div>
+  `;
+
+  grammarResultRetryAction = s.isChallenge
+    ? () => startGrammarReorderChallenge()
+    : () => startGrammarReorder(grammarCurrentTopicId);
   showGrammarView("result");
 }

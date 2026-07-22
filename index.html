@@ -155,13 +155,16 @@
     <div id="grammar-list-view">
       <h2 class="dq-window">文法</h2>
       <div id="grammar-topic-list"><!-- screens/grammar.js が動的に描画 --></div>
+      <button class="cta-button grammar-challenge-btn" id="grammar-challenge-btn">🏆 総合並び替えチャレンジ（全13問）</button>
     </div>
 
     <div id="grammar-detail-view" style="display:none;">
       <button class="secondary-button" id="grammar-back-to-list-btn">← 一覧へ戻る</button>
       <div style="height:10px;"></div>
       <div id="grammar-cards-container"><!-- screens/grammar.js が動的に描画 --></div>
-      <button class="cta-button" id="grammar-start-quiz-btn">クイズに挑戦する</button>
+      <button class="cta-button" id="grammar-start-quiz-btn">4択クイズに挑戦する</button>
+      <div style="height:10px;"></div>
+      <button class="secondary-button" id="grammar-start-reorder-btn">並び替えクイズに挑戦する</button>
     </div>
 
     <div id="grammar-quiz-view" style="display:none;">
@@ -172,6 +175,18 @@
       <div id="grammar-quiz-feedback-banner"></div>
       <div class="quiz-card dq-window dq-window-frame" id="grammar-quiz-card"><!-- screens/grammar.js が動的に描画 --></div>
       <div id="grammar-quiz-answer-area"><!-- screens/grammar.js が動的に描画 --></div>
+    </div>
+
+    <div id="grammar-reorder-view" style="display:none;">
+      <div class="quiz-progress">
+        <span id="grammar-reorder-progress-label">1 / 1</span>
+        <div class="xp-bar-track"><div class="xp-bar-fill" id="grammar-reorder-progress-bar" style="width:0%"></div></div>
+      </div>
+      <div id="grammar-reorder-feedback-banner"></div>
+      <div class="reorder-hint" id="grammar-reorder-hint"><!-- screens/grammar.js が動的に描画 --></div>
+      <div class="reorder-answer-area" id="grammar-reorder-answer"><!-- screens/grammar.js が動的に描画 --></div>
+      <div class="reorder-word-bank" id="grammar-reorder-bank"><!-- screens/grammar.js が動的に描画 --></div>
+      <button class="secondary-button" id="grammar-reorder-reset-btn">やり直す</button>
     </div>
 
     <div id="grammar-result-view" style="display:none;">
