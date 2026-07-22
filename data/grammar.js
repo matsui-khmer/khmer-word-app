@@ -32,7 +32,7 @@ const GRAMMAR_TOPICS = [
       { prompt: "「日本（国）」を表す正しい順番は？", choices: ["ស្រុក ជប៉ុន（国＋日本）", "ជប៉ុន ស្រុក（日本＋国）", "ជប៉ុន だけ", "ស្រុក だけ"], correctIndex: 0 },
       { prompt: "「ខ្ញុំ មក ពី ស្រុក ជប៉ុន។」の意味は？", choices: ["私は日本から来ました", "私は日本へ行きます", "私は日本人です", "私は日本語が好きです"], correctIndex: 0 },
     ],
-    reorder: { khmer: "ខ្ញុំ មក ពី ស្រុក ជប៉ុន។", translation: "私は日本（国）から来ました" },
+    reorder: { khmer: "ខ្ញុំ មក ពី ស្រុក ជប៉ុន។", reading: "クニョム　モーク　ピー　スロッ　チャポン", translation: "私は日本（国）から来ました" },
   },
   {
     id: "question",
@@ -67,7 +67,7 @@ const GRAMMAR_TOPICS = [
       { prompt: "「彼は何を食べますか？」の「何」にあたる単語は？", choices: ["អី（アイ）", "នៅ（ナウ）", "ចង់（チョン）", "ទេ（テー）"], correctIndex: 0 },
       { prompt: "「何歳ですか？」と数字を聞きたいときに使う疑問詞は？", choices: ["ប៉ុន្មាន（ポンマーン）", "អ្នកណា（ネアックナー）", "ហេតុអ្វី（ハエトアヴァイ）", "យ៉ាងម៉េច（ヤーンマッ）"], correctIndex: 0 },
     ],
-    reorder: { khmer: "គាត់ ញ៉ាំ អី？", translation: "彼は何を食べますか？" },
+    reorder: { khmer: "គាត់ ញ៉ាំ អី？", reading: "コアット　ニャム　アイ", translation: "彼は何を食べますか？" },
   },
   {
     id: "negative",
@@ -100,7 +100,7 @@ const GRAMMAR_TOPICS = [
       { prompt: "「今日はあまり暑くないです」の「あまり〜ない」にあたる部分は？", choices: ["មិនសូវ（ムンソウ）", "មិន（ムン）だけ", "សោះ（ソホ）", "គ្មាន（クミエン）"], correctIndex: 0 },
       { prompt: "名詞・名前を否定するときに使う表現は？", choices: ["មិនមែន（ムンメーン）", "មិនសូវ（ムンソウ）", "ចង់（チョン）", "ត្រូវ（トラウ）"], correctIndex: 0 },
     ],
-    reorder: { khmer: "ថ្ងៃនេះ មិន ក្តៅ ទេ។", translation: "今日は暑くないです" },
+    reorder: { khmer: "ថ្ងៃនេះ មិន ក្តៅ ទេ។", reading: "ダガイニヒ　ムン　クダウ　テー", translation: "今日は暑くないです" },
   },
   {
     id: "verb",
@@ -130,7 +130,7 @@ const GRAMMAR_TOPICS = [
       { prompt: "「猫が家にいる」で使うのはどちら？", choices: ["នៅ（ナウ）", "មាន（ミエン）", "ចង់（チョン）", "ត្រូវ（トラウ）"], correctIndex: 0 },
       { prompt: "動詞と目的語の関係で正しいのは？", choices: ["セットで並べ、間に他の語を挟まない", "自由な順番で入れ替えてよい", "目的語は省略必須", "動詞の前に必ず主語が必要"], correctIndex: 0 },
     ],
-    reorder: { khmer: "ឆ្មា នៅ ផ្ទះ។", translation: "猫が家にいる" },
+    reorder: { khmer: "ឆ្មា នៅ ផ្ទះ។", reading: "チマー　ナウ　プテア", translation: "猫が家にいる" },
   },
   {
     id: "adjective",
@@ -159,7 +159,7 @@ const GRAMMAR_TOPICS = [
       { prompt: "「カンボジア料理はおいしいですか？」の疑問表現は？", choices: ["ឬ ទេ（ルー テー）", "សូម（ソーム）", "ជាង（チアン）", "ដូច（ドーチ）"], correctIndex: 0 },
       { prompt: "「カンボジア料理はおいしくないです」で使う否定表現は？", choices: ["មិន...ទេ", "មិនមែន...ទេ", "គ្មាន", "សោះ"], correctIndex: 0 },
     ],
-    reorder: { khmer: "ម្ហូប ខ្មែរ មិន ឆ្ងាញ់ ទេ។", translation: "カンボジア料理はおいしくないです" },
+    reorder: { khmer: "ម្ហូប ខ្មែរ មិន ឆ្ងាញ់ ទេ។", reading: "ムホープ　クマエ　ムン　チガニュ　テー", translation: "カンボジア料理はおいしくないです" },
   },
   {
     id: "possession",
@@ -181,7 +181,7 @@ const GRAMMAR_TOPICS = [
       { prompt: "「黒いのをください」のように所有関係のない修飾で使う単語は？", choices: ["អា（アー）", "របស់（ロボホ）", "ដូច（ドーチ）", "ណា（ナー）"], correctIndex: 0 },
       { prompt: "「ロボホ」は省略できる？", choices: ["省略しても意味は通じる", "省略すると意味が変わる", "省略すると文法的に誤り", "名詞の前には必ず必要"], correctIndex: 0 },
     ],
-    reorder: { khmer: "ទូរសព្ទ របស់ ខ្ញុំ", translation: "私の携帯電話" },
+    reorder: { khmer: "ទូរសព្ទ របស់ ខ្ញុំ", reading: "トゥールサップ　ロボホ　クニョム", translation: "私の携帯電話" },
   },
   {
     id: "auxiliary",
@@ -209,7 +209,7 @@ const GRAMMAR_TOPICS = [
       { prompt: "「〜したい」を表す助動詞は？", choices: ["ចង់（チョン）", "ត្រូវ（トラウ）", "ចូលចិត្ត（チョールチャット）", "ចេះ（チェヘ）"], correctIndex: 0 },
       { prompt: "「しなければならない」を表す助動詞は？", choices: ["ត្រូវ（トラウ）", "ចង់（チョン）", "ចេះ（チェヘ）", "ណា（ナー）"], correctIndex: 0 },
     ],
-    reorder: { khmer: "ខ្ញុំ ចង់ រៀន ភាសា ខ្មែរ។", translation: "私はクメール語を勉強したいです" },
+    reorder: { khmer: "ខ្ញុំ ចង់ រៀន ភាសា ខ្មែរ។", reading: "クニョム　チョン　リエン　ピアサー　クマエ", translation: "私はクメール語を勉強したいです" },
   },
   {
     id: "preposition",
@@ -232,7 +232,7 @@ const GRAMMAR_TOPICS = [
       { prompt: "「〜と（一緒に）」を表す前置詞は？", choices: ["ជាមួយ（チアムオイ）", "អំពី（オンピー）", "តាម（ターム）", "នៅ（ナウ）"], correctIndex: 0 },
       { prompt: "「まで（到着点）」を表す前置詞は？", choices: ["ដល់（ドル）", "ពី（ピー）", "នឹង（ヌン）", "ដោយ（ダオイ）"], correctIndex: 0 },
     ],
-    reorder: { khmer: "ខ្ញុំ មក ពី ស្រុក ជប៉ុន។", translation: "私は日本（国）から来ました" },
+    reorder: { khmer: "ខ្ញុំ មក ពី ស្រុក ជប៉ុន។", reading: "クニョム　モーク　ピー　スロッ　チャポン", translation: "私は日本（国）から来ました" },
   },
   {
     id: "counter",
@@ -255,8 +255,8 @@ const GRAMMAR_TOPICS = [
       { prompt: "単位（数え方）を付けたほうがよい場合として正しいのは？", choices: ["付けないと意味が変わるとき", "常に不要", "動詞の後にしか使えない", "疑問文でしか使わない"], correctIndex: 0 },
       { prompt: "「バナナ1」とだけ言うと、通常どんな意味になる？", choices: ["バナナ1本", "バナナ1房", "バナナ1袋", "バナナ全部"], correctIndex: 0 },
     ],
-    // 講義資料内に完全な例文が無かったため、人を数える定番の類別詞「នាក់（ナック）」で新規に作成。要確認。
-    reorder: { khmer: "សិស្ស ៣ នាក់", translation: "生徒3人" },
+    // 講義資料内に完全な例文が無かったため、人を数える定番の類別詞「នាក់（ナック）」で新規に作成。読み方も含め要確認。
+    reorder: { khmer: "សិស្ស ៣ នាក់", reading: "セイサ　バイ　ネアック", translation: "生徒3人" },
   },
   {
     id: "imperative",
@@ -282,7 +282,7 @@ const GRAMMAR_TOPICS = [
       { prompt: "「〜しないで」と禁止するときに文頭に付ける単語は？", choices: ["កុំ（コム）", "សូម（ソーム）", "ជាង（チアン）", "ដូច（ドーチ）"], correctIndex: 0 },
       { prompt: "命令文の作り方として正しいのは？", choices: ["動詞をそのまま使う", "動詞の前にソームを付ける", "動詞を過去形にする", "主語を必ず付ける"], correctIndex: 0 },
     ],
-    reorder: { khmer: "កុំ ដាក់ ជី។", translation: "パクチーを入れないで" },
+    reorder: { khmer: "កុំ ដាក់ ជី។", reading: "コム　ダック　チー", translation: "パクチーを入れないで" },
   },
   {
     id: "tense",
@@ -309,7 +309,7 @@ const GRAMMAR_TOPICS = [
       { prompt: "「まだ〜しない」を表す表現は？", choices: ["មិន ទាន់（ムン トアン）＋動詞", "ហើយ（ハウイ）", "នឹង（ヌン）", "ដែល（ダエル）"], correctIndex: 0 },
     ],
     // 講義資料内に完全な例文が無かったため、過去マーカー「បាន」を使って新規に作成。要確認。
-    reorder: { khmer: "ខ្ញុំ បាន ទៅ ភ្នំពេញ។", translation: "私はプノンペンに行きました" },
+    reorder: { khmer: "ខ្ញុំ បាន ទៅ ភ្នំពេញ។", reading: "クニョム　バーン　タウ　プノンペン", translation: "私はプノンペンに行きました" },
   },
   {
     id: "comparison",
@@ -335,7 +335,7 @@ const GRAMMAR_TOPICS = [
       { prompt: "最上級（一番〜）を表すには、比較対象のBをどの単語に変える？", choices: ["គេ（ケー）", "នៅ（ナウ）", "ចង់（チョン）", "ត្រូវ（トラウ）"], correctIndex: 0 },
       { prompt: "「AはBと同じように〜だ」を表す単語は？", choices: ["ដូច（ドーチ）", "ជាង（チアン）", "ពី（ピー）", "ដល់（ドル）"], correctIndex: 0 },
     ],
-    reorder: { khmer: "ម្ហូប ខ្មែរ ឆ្ងាញ់ ជាង ម្ហូប ជប៉ុន។", translation: "カンボジア料理は日本料理より美味しいです" },
+    reorder: { khmer: "ម្ហូប ខ្មែរ ឆ្ងាញ់ ជាង ម្ហូប ជប៉ុន។", reading: "ムホープ　クマエ　チガニュ　チアン　ムホープ　チャポン", translation: "カンボジア料理は日本料理より美味しいです" },
   },
   {
     id: "causative-passive",
@@ -365,6 +365,6 @@ const GRAMMAR_TOPICS = [
       { prompt: "迷ったときに使うとよい受け身の表現は？", choices: ["គេ（ケー）＋動詞", "ត្រូវ（トラウ）＋動詞のみ", "ជាង（チアン）", "ដូច（ドーチ）"], correctIndex: 0 },
       { prompt: "「ត្រូវ（トラウ）」を使った受け身表現が使われる場面として正しいのは？", choices: ["外国語の翻訳や被害にあったときなど限定的な場面", "日常会話で最も多用される", "肯定文でのみ使う", "疑問文でのみ使う"], correctIndex: 0 },
     ],
-    reorder: { khmer: "ម្តាយ ឲ្យ កូន ទៅ សាលា រៀន។", translation: "母は子供に学校に行かせます" },
+    reorder: { khmer: "ម្តាយ ឲ្យ កូន ទៅ សាលា រៀន។", reading: "マダーイ　アオイ　コーン　タウ　サーラー　リエン", translation: "母は子供に学校に行かせます" },
   },
 ];

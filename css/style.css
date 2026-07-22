@@ -1107,17 +1107,30 @@ button {
   margin-bottom: 16px;
 }
 .reorder-chip {
-  font-family: 'Noto Sans Khmer', sans-serif;
-  font-size: 18px;
-  padding: 10px 14px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 14px;
   border-radius: 10px;
   border: none;
   cursor: pointer;
 }
+.reorder-chip .khmer { font-family: 'Noto Sans Khmer', sans-serif; font-size: 18px; line-height: 1.2; }
+.reorder-chip-reading { font-size: 10px; font-weight: 700; opacity: 0.85; white-space: nowrap; }
 .reorder-chip.in-bank { background: var(--card-soft); color: var(--ink); border: 1px solid var(--border); }
 .reorder-chip.in-answer { background: var(--accent-strong); color: #fff; }
 .reorder-chip.correct { background: var(--success); color: #fff; }
 .reorder-chip.incorrect { background: var(--danger); color: #fff; }
+.reorder-chip-punct {
+  background: transparent;
+  border: 1px dashed var(--border);
+  color: var(--ink);
+  opacity: 0.6;
+  cursor: default;
+  padding: 8px 10px;
+  font-size: 20px;
+}
 .reorder-correct-answer { text-align: center; font-family: 'Noto Sans Khmer', sans-serif; font-size: 18px; color: var(--dq-window-gold); margin-top: 6px; }
 
 .grammar-challenge-btn { margin-top: 14px; }

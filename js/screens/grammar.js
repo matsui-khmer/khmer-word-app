@@ -222,11 +222,37 @@ function finishGrammarQuiz() {
 
 // ---------- 並び替えクイズ ----------
 
+// 文末の「。」「？」は語順の答えとして自明なので、単語トークンから切り離して
+// 常に末尾に固定表示する（並び替えの対象にしない）
+function tokenizeGrammarReorderKhmer(khmerText) {
+  const rawTokens = khmerText.split(/\s+/).filter(Boolean);
+  const lastIndex = rawTokens.length - 1;
+  const wordTokens = rawTokens.slice();
+  let punctuation = "";
+
+  const punctMatch = rawTokens[lastIndex].match(/([។？])$/);
+  if (punctMatch) {
+    punctuation = punctMatch[0];
+    const stripped = wordTokens[lastIndex].slice(0, wordTokens[lastIndex].length - punctuation.length);
+    if (stripped) {
+      wordTokens[lastIndex] = stripped;
+    } else {
+      wordTokens.pop();
+    }
+  }
+
+  return { wordTokens, punctuation };
+}
+
 function buildGrammarReorderItem(topic) {
+  const { wordTokens, punctuation } = tokenizeGrammarReorderKhmer(topic.reorder.khmer);
+  const readings = topic.reorder.reading.split(/[\s　]+/).filter(Boolean);
   return {
     topicTitle: topic.title,
     translation: topic.reorder.translation,
-    tokens: topic.reorder.khmer.split(/\s+/).filter(Boolean),
+    tokens: wordTokens,
+    readings,
+    punctuation,
   };
 }
 
@@ -271,6 +297,8 @@ function renderGrammarReorderQuestion() {
   document.getElementById("grammar-reorder-hint").textContent = `${titlePrefix}次の意味になるように、下の単語を正しい順番にタップしてください：「${item.translation}」`;
 
   s.tokens = item.tokens;
+  s.readings = item.readings;
+  s.punctuation = item.punctuation;
   s.placedIndices = [];
   s.bankIndices = shuffle(item.tokens.map((_, i) => i));
   s.answered = false;
@@ -278,17 +306,33 @@ function renderGrammarReorderQuestion() {
   renderGrammarReorderChips();
 }
 
+function grammarReorderChipHtml(tokenIndex, extraClass, dataAttr) {
+  const s = grammarReorderState;
+  const showReading = App.user.settings.showReading;
+  return `
+    <button class="reorder-chip ${extraClass}" ${dataAttr}>
+      <span class="khmer">${s.tokens[tokenIndex]}</span>
+      ${showReading ? `<span class="reorder-chip-reading">${s.readings[tokenIndex] || ""}</span>` : ""}
+    </button>
+  `;
+}
+
 function renderGrammarReorderChips() {
   const s = grammarReorderState;
 
-  document.getElementById("grammar-reorder-answer").innerHTML = s.placedIndices
-    .map((tokenIndex, pos) => `<button class="reorder-chip in-answer khmer" data-pos="${pos}">${s.tokens[tokenIndex]}</button>`)
+  const answerChipsHtml = s.placedIndices
+    .map((tokenIndex, pos) => grammarReorderChipHtml(tokenIndex, "in-answer", `data-pos="${pos}"`))
     .join("");
+  const punctuationHtml = s.punctuation
+    ? `<span class="reorder-chip reorder-chip-punct khmer">${s.punctuation}</span>`
+    : "";
+  document.getElementById("grammar-reorder-answer").innerHTML = answerChipsHtml + punctuationHtml;
+
   document.getElementById("grammar-reorder-bank").innerHTML = s.bankIndices
-    .map((tokenIndex) => `<button class="reorder-chip in-bank khmer" data-token-index="${tokenIndex}">${s.tokens[tokenIndex]}</button>`)
+    .map((tokenIndex) => grammarReorderChipHtml(tokenIndex, "in-bank", `data-token-index="${tokenIndex}"`))
     .join("");
 
-  document.querySelectorAll("#grammar-reorder-answer .reorder-chip").forEach((btn) => {
+  document.querySelectorAll("#grammar-reorder-answer .reorder-chip.in-answer").forEach((btn) => {
     btn.addEventListener("click", () => moveGrammarReorderChipToBank(Number(btn.dataset.pos)));
   });
   document.querySelectorAll("#grammar-reorder-bank .reorder-chip").forEach((btn) => {
@@ -331,7 +375,7 @@ function checkGrammarReorderAnswer() {
   const isCorrect = s.placedIndices.every((tokenIndex, pos) => tokenIndex === pos);
   const item = s.queue[s.index];
 
-  document.querySelectorAll("#grammar-reorder-answer .reorder-chip").forEach((btn) => {
+  document.querySelectorAll("#grammar-reorder-answer .reorder-chip.in-answer").forEach((btn) => {
     btn.classList.add(isCorrect ? "correct" : "incorrect");
   });
 
@@ -350,7 +394,7 @@ function checkGrammarReorderAnswer() {
   const banner = document.getElementById("grammar-reorder-feedback-banner");
   banner.innerHTML = `
     <div class="feedback-banner ${isCorrect ? "correct" : "incorrect"}">${isCorrect ? "正解！" : "おしい！"}</div>
-    ${isCorrect ? "" : `<div class="reorder-correct-answer">${item.tokens.join(" ")}</div>`}
+    ${isCorrect ? "" : `<div class="reorder-correct-answer">${item.tokens.join(" ")}${item.punctuation}</div>`}
   `;
 
   setTimeout(() => {
