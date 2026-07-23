@@ -35,6 +35,14 @@ function initGrammarScreen() {
     resetGrammarReorderPlacement();
   });
 
+  document.getElementById("grammar-quiz-next-btn").addEventListener("click", () => {
+    advanceGrammarQuiz();
+  });
+
+  document.getElementById("grammar-reorder-next-btn").addEventListener("click", () => {
+    advanceGrammarReorder();
+  });
+
   document.getElementById("grammar-result-retry-btn").addEventListener("click", () => {
     if (grammarResultRetryAction) grammarResultRetryAction();
   });
@@ -130,6 +138,7 @@ function startGrammarQuiz(topicId) {
 function renderGrammarQuizQuestion() {
   const s = grammarQuizState;
   document.getElementById("grammar-quiz-feedback-banner").innerHTML = "";
+  document.getElementById("grammar-quiz-next-btn").style.display = "none";
 
   const total = s.queue.length;
   document.getElementById("grammar-quiz-progress-label").textContent = `${s.index + 1} / ${total}`;
@@ -180,14 +189,22 @@ function handleGrammarAnswer(isCorrect) {
   if (isCorrect) soundPlayCorrect();
   else soundPlayIncorrect();
 
-  setTimeout(() => {
-    s.index++;
-    if (s.index >= s.queue.length) {
-      finishGrammarQuiz();
-    } else {
-      renderGrammarQuizQuestion();
-    }
-  }, 900);
+  if (isCorrect) {
+    setTimeout(advanceGrammarQuiz, 900);
+  } else {
+    document.getElementById("grammar-quiz-next-btn").style.display = "";
+  }
+}
+
+function advanceGrammarQuiz() {
+  const s = grammarQuizState;
+  document.getElementById("grammar-quiz-next-btn").style.display = "none";
+  s.index++;
+  if (s.index >= s.queue.length) {
+    finishGrammarQuiz();
+  } else {
+    renderGrammarQuizQuestion();
+  }
 }
 
 function finishGrammarQuiz() {
@@ -287,6 +304,8 @@ function startGrammarReorderChallenge() {
 function renderGrammarReorderQuestion() {
   const s = grammarReorderState;
   document.getElementById("grammar-reorder-feedback-banner").innerHTML = "";
+  document.getElementById("grammar-reorder-next-btn").style.display = "none";
+  document.getElementById("grammar-reorder-reset-btn").style.display = "";
 
   const total = s.queue.length;
   document.getElementById("grammar-reorder-progress-label").textContent = `${s.index + 1} / ${total}`;
@@ -372,7 +391,9 @@ function resetGrammarReorderPlacement() {
 function checkGrammarReorderAnswer() {
   const s = grammarReorderState;
   s.answered = true;
-  const isCorrect = s.placedIndices.every((tokenIndex, pos) => tokenIndex === pos);
+  // 同じ単語が文中に複数回登場する場合があるため、元のトークン番号ではなく
+  // 実際に置かれた単語の文字列が正しい位置の単語と一致するかで正誤を判定する
+  const isCorrect = s.placedIndices.every((tokenIndex, pos) => s.tokens[tokenIndex] === s.tokens[pos]);
   const item = s.queue[s.index];
 
   document.querySelectorAll("#grammar-reorder-answer .reorder-chip.in-answer").forEach((btn) => {
@@ -397,14 +418,23 @@ function checkGrammarReorderAnswer() {
     ${isCorrect ? "" : `<div class="reorder-correct-answer">${item.tokens.join(" ")}${item.punctuation}</div>`}
   `;
 
-  setTimeout(() => {
-    s.index++;
-    if (s.index >= s.queue.length) {
-      finishGrammarReorderQueue();
-    } else {
-      renderGrammarReorderQuestion();
-    }
-  }, isCorrect ? 900 : 1800);
+  if (isCorrect) {
+    setTimeout(advanceGrammarReorder, 900);
+  } else {
+    document.getElementById("grammar-reorder-reset-btn").style.display = "none";
+    document.getElementById("grammar-reorder-next-btn").style.display = "";
+  }
+}
+
+function advanceGrammarReorder() {
+  const s = grammarReorderState;
+  document.getElementById("grammar-reorder-next-btn").style.display = "none";
+  s.index++;
+  if (s.index >= s.queue.length) {
+    finishGrammarReorderQueue();
+  } else {
+    renderGrammarReorderQuestion();
+  }
 }
 
 function finishGrammarReorderQueue() {
