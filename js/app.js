@@ -88,6 +88,8 @@ function initSettingsScreen() {
     App.user = loadUserState();
     navigateTo("home");
   });
+
+  initFeedbackForm();
 }
 
 function renderSettingsScreen() {

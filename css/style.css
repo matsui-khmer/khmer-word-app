@@ -429,6 +429,33 @@ button {
   background: var(--card);
 }
 
+/* ---------- フィードバック ---------- */
+.feedback-rating { display: flex; gap: 6px; margin-bottom: 10px; }
+.feedback-star {
+  font-size: 26px;
+  line-height: 1;
+  background: none;
+  border: none;
+  color: var(--border);
+  padding: 0;
+  cursor: pointer;
+}
+.feedback-star.active { color: var(--gold); }
+#feedback-message {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--card-soft);
+  resize: vertical;
+  margin-bottom: 10px;
+}
+.feedback-status { font-size: 12px; color: var(--ink-soft); margin-top: 6px; min-height: 16px; }
+
 /* ---------- レッスン集客用LINE導線 ---------- */
 .line-cta {
   text-align: center;
