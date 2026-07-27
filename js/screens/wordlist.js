@@ -22,7 +22,71 @@ function wordMatchesFilter(word, record, filter) {
   return true; // "all"
 }
 
+// 理解度ランクの内訳と、よく間違えている単語（つまずきポイント）を表示する
+function renderWordlistStats() {
+  const container = document.getElementById("wordlist-stats");
+  if (!container) return;
+
+  const rankCounts = [0, 0, 0, 0, 0, 0]; // index 1-5を使用
+  const weakWords = [];
+
+  App.words.forEach((word) => {
+    const record = App.progress[word.id];
+    const rank = srsComprehensionRank(record);
+    rankCounts[rank]++;
+    const incorrect = record ? record.incorrectCount || 0 : 0;
+    if (incorrect > 0) {
+      weakWords.push({ word, incorrect, correct: record.correctCount || 0 });
+    }
+  });
+
+  weakWords.sort((a, b) => b.incorrect - a.incorrect);
+  const top = weakWords.slice(0, 8);
+
+  const rankSummaryHtml = SRS_COMPREHENSION_RANK_META.slice(1)
+    .map(
+      (meta) => `
+        <div class="stats-rank-item">
+          <span class="stats-rank-icon">${meta.icon}</span>
+          <span class="stats-rank-count">${rankCounts[meta.rank]}</span>
+          <span class="stats-rank-label">${meta.label}</span>
+        </div>
+      `
+    )
+    .join("");
+
+  const weakListHtml = top.length
+    ? top
+        .map(({ word, incorrect, correct }) => {
+          const total = incorrect + correct;
+          const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+          const readingHtml = word.reading
+            ? `<span class="reading-tag small">${readingWithIpaHtml(word)}</span>`
+            : "";
+          return `
+            <div class="weak-word-row">
+              <span class="km khmer">${word.khmer}</span>
+              ${readingHtml}
+              <span class="jp">${word.meaning}</span>
+              <span class="weak-word-stat">${incorrect}回間違い・正答率${accuracy}%</span>
+            </div>
+          `;
+        })
+        .join("")
+    : `<div style="text-align:center; color:var(--ink-soft); padding:8px 0;">まだ間違えた単語はありません</div>`;
+
+  container.innerHTML = `
+    <div class="card">
+      <div class="card-label-row">つまずきポイント</div>
+      <div class="stats-rank-row">${rankSummaryHtml}</div>
+      ${top.length ? `<div class="stats-weak-title">よく間違える単語 TOP${top.length}</div>` : ""}
+      <div class="weak-word-list">${weakListHtml}</div>
+    </div>
+  `;
+}
+
 function renderWordlistScreen() {
+  renderWordlistStats();
   const container = document.getElementById("wordlist-content");
   const grouped = {};
 

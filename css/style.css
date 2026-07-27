@@ -691,6 +691,55 @@ button {
 .feedback-banner.incorrect { background: var(--danger-soft); color: var(--danger); }
 
 /* ---------- 単語一覧/図鑑 ---------- */
+.stats-rank-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  margin-top: 6px;
+}
+.stats-rank-item {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 2px;
+  background: var(--card-soft);
+  border-radius: 10px;
+}
+.stats-rank-icon { font-size: 14px; }
+.stats-rank-count { font-size: 15px; font-weight: 700; color: var(--ink); }
+.stats-rank-label { font-size: 9px; color: var(--ink-soft); }
+.stats-weak-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--danger);
+  margin: 12px 0 6px;
+}
+.weak-word-list { display: flex; flex-direction: column; gap: 6px; }
+.weak-word-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 8px;
+  background: var(--card-soft);
+  border-radius: 10px;
+  font-size: 12px;
+}
+.weak-word-row .km { font-size: 15px; font-weight: 600; color: var(--ink); }
+.weak-word-row .jp { color: var(--ink-soft); }
+.weak-word-row .weak-word-stat { margin-left: auto; color: var(--danger); font-size: 11px; white-space: nowrap; }
+.reading-tag.small {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--card);
+  padding: 0 6px;
+  border-radius: 999px;
+}
+
 .category-block { margin-bottom: 18px; }
 .category-title {
   font-size: 14px;
