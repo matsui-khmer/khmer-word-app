@@ -2,7 +2,7 @@
 // GAS Webアプリ（フィードバック収集/FeedbackCode.gs）へ送信し、スプレッドシートに集計される。
 // デプロイ後、発行されたWebアプリURLを下の FEEDBACK_ENDPOINT_URL に設定すること。
 
-const FEEDBACK_ENDPOINT_URL = "";
+const FEEDBACK_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbzt-5q01eWNKEKqork0sJL2CtSQBBE4zmKobFoO7qnyrmSiY-lASCmlCMM9NTIylhYP/exec";
 
 let feedbackSelectedRating = 0;
 
