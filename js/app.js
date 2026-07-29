@@ -17,6 +17,7 @@ const SCREEN_RENDERERS = {
   result: renderResultScreen,
   wordlist: renderWordlistScreen,
   grammar: renderGrammarScreen,
+  phrases: renderPhrasesScreen,
   achievements: renderAchievementsScreen,
   shop: renderShopScreen,
   settings: renderSettingsScreen,

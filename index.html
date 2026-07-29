@@ -72,6 +72,11 @@
     <button class="secondary-button app-share-btn">🤝 このアプリを友達に紹介する</button>
     <div style="height:10px;"></div>
 
+    <a href="#phrases" style="text-decoration:none;">
+      <button class="secondary-button">🙏 実用フレーズ集を見る</button>
+    </a>
+    <div style="height:10px;"></div>
+
     <div class="card line-cta">
       <div class="line-cta-text">クメール語レッスンにご興味のある方は<br>お気軽にご相談ください</div>
       <a class="line-cta-link" data-line-cta target="_blank" rel="noopener">
@@ -205,6 +210,13 @@
       <div style="height:10px;"></div>
       <button class="secondary-button" id="grammar-result-back-btn">一覧へ戻る</button>
     </div>
+  </section>
+
+  <!-- ============ 実用フレーズ集画面 ============ -->
+  <section id="screen-phrases" class="screen">
+    <h2 class="dq-window">実用フレーズ集</h2>
+    <p style="font-size:12.5px; color:var(--ink-soft); padding:0 4px 10px;">Telegramチャンネル「クメール語を一緒に学ぼう！」で紹介した、実際に使えるフレーズをまとめました。</p>
+    <div id="phrases-content"><!-- screens/phrases.js が動的に描画 --></div>
   </section>
 
   <!-- ============ 実績画面 ============ -->
@@ -396,6 +408,7 @@
 
 <script src="data/words.js"></script>
 <script src="data/grammar.js"></script>
+<script src="data/phrases.js"></script>
 <script src="js/version.js"></script>
 <script src="js/utils.js"></script>
 <script src="js/sound.js"></script>
@@ -411,6 +424,7 @@
 <script src="js/screens/result.js"></script>
 <script src="js/screens/wordlist.js"></script>
 <script src="js/screens/grammar.js"></script>
+<script src="js/screens/phrases.js"></script>
 <script src="js/screens/achievements.js"></script>
 <script src="js/screens/shop.js"></script>
 <script src="js/feedback.js"></script>
