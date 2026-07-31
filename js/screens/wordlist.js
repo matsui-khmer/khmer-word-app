@@ -138,20 +138,69 @@ function renderWordlistScreen() {
         })
         .join("");
       return `
-        <div class="wordlist-cat-header" data-cat="${cat}">【${cat}】 ${items.length}語</div>
-        ${rows}
+        <div class="wordlist-cat-section" data-cat="${cat}">
+          <div class="wordlist-cat-header" data-cat="${cat}">【${cat}】 ${items.length}語</div>
+          ${rows}
+        </div>
       `;
     })
     .join("");
 
   railContainer.innerHTML = categories
-    .map((cat) => `<button data-cat="${cat}">${cat}</button>`)
+    .map((cat) => `<button data-cat="${cat}" class="khmer">${cat}</button>`)
     .join("");
-  railContainer.querySelectorAll("button").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const header = container.querySelector(`.wordlist-cat-header[data-cat="${btn.dataset.cat}"]`);
-      if (header) header.scrollIntoView({ block: "start" });
+
+  function jumpToCategory(cat) {
+    // sticky状態の見出し自体ではなく、通常配置のセクション枠を基準にスクロールする
+    // （見出しは自分のセクション末尾に貼り付いた位置に残っていることがあり、
+    // それを基準にすると本来の先頭ではなくセクションの終わり際に着地してしまうため）
+    const section = container.querySelector(`.wordlist-cat-section[data-cat="${cat}"]`);
+    if (section) section.scrollIntoView({ block: "start" });
+  }
+
+  const railButtons = Array.from(railContainer.querySelectorAll("button"));
+  railButtons.forEach((btn) => {
+    btn.addEventListener("click", () => jumpToCategory(btn.dataset.cat));
+  });
+
+  // 指をレール上で滑らせている間、通過した文字へ連続してジャンプできるようにする
+  // （iOSの連絡先アプリの索引と同じ「なぞって移動」操作）
+  let railDragging = false;
+  function railButtonAtPoint(x, y) {
+    return railButtons.find((btn) => {
+      const r = btn.getBoundingClientRect();
+      return y >= r.top && y <= r.bottom && x >= r.left && x <= r.right;
     });
+  }
+  function handleRailPointer(clientX, clientY) {
+    const btn = railButtonAtPoint(clientX, clientY);
+    if (!btn) return;
+    railTip.textContent = btn.dataset.cat;
+    railTip.style.display = "flex";
+    const railRect = railContainer.getBoundingClientRect();
+    railTip.style.top = (btn.getBoundingClientRect().top - railRect.top) + "px";
+    jumpToCategory(btn.dataset.cat);
+  }
+  const railTip = document.createElement("div");
+  railTip.className = "wordlist-rail-tip khmer";
+  railContainer.appendChild(railTip);
+
+  railContainer.addEventListener("pointerdown", (e) => {
+    railDragging = true;
+    railContainer.setPointerCapture(e.pointerId);
+    handleRailPointer(e.clientX, e.clientY);
+  });
+  railContainer.addEventListener("pointermove", (e) => {
+    if (!railDragging) return;
+    handleRailPointer(e.clientX, e.clientY);
+  });
+  railContainer.addEventListener("pointerup", () => {
+    railDragging = false;
+    railTip.style.display = "none";
+  });
+  railContainer.addEventListener("pointercancel", () => {
+    railDragging = false;
+    railTip.style.display = "none";
   });
 
   if (wordlistSectionObserver) wordlistSectionObserver.disconnect();
