@@ -12,6 +12,19 @@ function initWordlistScreen() {
       renderWordlistScreen();
     });
   });
+
+  document.getElementById("wordlist-index-toggle").addEventListener("click", () => {
+    toggleWordlistIndexRail();
+  });
+}
+
+function toggleWordlistIndexRail(forceOpen) {
+  const rail = document.getElementById("wordlist-index-rail");
+  const toggleBtn = document.getElementById("wordlist-index-toggle");
+  const open = forceOpen !== undefined ? forceOpen : !rail.classList.contains("open");
+  rail.classList.toggle("open", open);
+  toggleBtn.classList.toggle("active", open);
+  toggleBtn.setAttribute("aria-label", open ? "索引を閉じる" : "索引を開く");
 }
 
 function wordMatchesFilter(word, record, filter) {
@@ -146,8 +159,11 @@ function renderWordlistScreen() {
     })
     .join("");
 
+  // 「独立体母音字」は子音1文字とは違い長い文字列なので、レール上だけ短縮表示する
+  const railLabel = (cat) => (cat === "独立体母音字" ? "母" : cat);
+
   railContainer.innerHTML = categories
-    .map((cat) => `<button data-cat="${cat}" class="khmer">${cat}</button>`)
+    .map((cat) => `<button data-cat="${cat}" class="khmer">${railLabel(cat)}</button>`)
     .join("");
 
   function jumpToCategory(cat) {
@@ -160,7 +176,10 @@ function renderWordlistScreen() {
 
   const railButtons = Array.from(railContainer.querySelectorAll("button"));
   railButtons.forEach((btn) => {
-    btn.addEventListener("click", () => jumpToCategory(btn.dataset.cat));
+    btn.addEventListener("click", () => {
+      jumpToCategory(btn.dataset.cat);
+      toggleWordlistIndexRail(false);
+    });
   });
 
   // 指をレール上で滑らせている間、通過した文字へ連続してジャンプできるようにする
@@ -175,7 +194,7 @@ function renderWordlistScreen() {
   function handleRailPointer(clientX, clientY) {
     const btn = railButtonAtPoint(clientX, clientY);
     if (!btn) return;
-    railTip.textContent = btn.dataset.cat;
+    railTip.textContent = railLabel(btn.dataset.cat);
     railTip.style.display = "flex";
     const railRect = railContainer.getBoundingClientRect();
     railTip.style.top = (btn.getBoundingClientRect().top - railRect.top) + "px";
@@ -197,12 +216,14 @@ function renderWordlistScreen() {
   railContainer.addEventListener("pointerup", () => {
     railDragging = false;
     railTip.style.display = "none";
+    toggleWordlistIndexRail(false);
   });
   railContainer.addEventListener("pointercancel", () => {
     railDragging = false;
     railTip.style.display = "none";
   });
 
+  const toggleBtn = document.getElementById("wordlist-index-toggle");
   if (wordlistSectionObserver) wordlistSectionObserver.disconnect();
   wordlistSectionObserver = new IntersectionObserver(
     (entries) => {
@@ -210,9 +231,13 @@ function renderWordlistScreen() {
         if (!entry.isIntersecting) return;
         const cat = entry.target.dataset.cat;
         railContainer.querySelectorAll("button").forEach((b) => b.classList.toggle("active", b.dataset.cat === cat));
+        if (!rail_isOpen()) toggleBtn.textContent = railLabel(cat);
       });
     },
     { rootMargin: "0px 0px -80% 0px" }
   );
+  function rail_isOpen() {
+    return railContainer.classList.contains("open");
+  }
   container.querySelectorAll(".wordlist-cat-header").forEach((header) => wordlistSectionObserver.observe(header));
 }
