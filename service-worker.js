@@ -1,7 +1,7 @@
 // PWAオフラインキャッシュ用 Service Worker
 // データや画面を更新したら CACHE_NAME のバージョン番号を上げること
 
-const CACHE_NAME = "kw-app-v39";
+const CACHE_NAME = "kw-app-v40";
 const APP_SHELL = [
   "./",
   "./index.html",

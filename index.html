@@ -15,12 +15,61 @@
 </head>
 <body>
 
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <symbol id="icon-home" viewBox="0 0 16 16">
+      <rect x="7" y="1" width="2" height="2"/><rect x="5" y="3" width="2" height="2"/><rect x="9" y="3" width="2" height="2"/>
+      <rect x="3" y="5" width="2" height="2"/><rect x="11" y="5" width="2" height="2"/>
+      <rect x="2" y="7" width="12" height="2"/>
+      <rect x="3" y="9" width="10" height="6"/>
+      <rect x="7" y="10" width="2" height="5" fill="var(--paper)"/>
+    </symbol>
+    <symbol id="icon-book" viewBox="0 0 16 16">
+      <rect x="2" y="2" width="6" height="12"/><rect x="8" y="2" width="6" height="12"/>
+      <rect x="7" y="2" width="2" height="12" fill="var(--paper)"/>
+      <rect x="3" y="4" width="4" height="1" fill="var(--paper)"/>
+      <rect x="9" y="4" width="4" height="1" fill="var(--paper)"/>
+    </symbol>
+    <symbol id="icon-grammar" viewBox="0 0 16 16">
+      <rect x="3" y="1" width="9" height="14"/>
+      <rect x="5" y="4" width="5" height="1" fill="var(--paper)"/>
+      <rect x="5" y="6" width="5" height="1" fill="var(--paper)"/>
+      <rect x="5" y="8" width="3" height="1" fill="var(--paper)"/>
+      <rect x="11" y="10" width="4" height="4"/>
+      <rect x="12.4" y="11" width="1.2" height="2" fill="var(--paper)"/>
+    </symbol>
+    <symbol id="icon-medal" viewBox="0 0 16 16">
+      <rect x="5" y="1" width="2" height="5"/><rect x="9" y="1" width="2" height="5"/>
+      <rect x="5" y="6" width="6" height="1"/>
+      <rect x="4" y="7" width="8" height="8"/>
+      <rect x="6" y="9" width="4" height="4" fill="var(--paper)"/>
+    </symbol>
+    <symbol id="icon-coin" viewBox="0 0 16 16">
+      <rect x="4" y="2" width="8" height="2"/><rect x="2" y="4" width="2" height="8"/><rect x="12" y="4" width="2" height="8"/>
+      <rect x="4" y="12" width="8" height="2"/>
+      <rect x="7" y="5" width="2" height="6" fill="var(--paper)"/>
+    </symbol>
+    <symbol id="icon-gear" viewBox="0 0 16 16">
+      <rect x="6" y="0" width="4" height="3"/><rect x="6" y="13" width="4" height="3"/>
+      <rect x="0" y="6" width="3" height="4"/><rect x="13" y="6" width="3" height="4"/>
+      <rect x="2" y="2" width="3" height="3"/><rect x="11" y="2" width="3" height="3"/>
+      <rect x="2" y="11" width="3" height="3"/><rect x="11" y="11" width="3" height="3"/>
+      <rect x="4" y="4" width="8" height="8"/>
+      <rect x="6" y="6" width="4" height="4" fill="var(--paper)"/>
+    </symbol>
+    <symbol id="icon-person" viewBox="0 0 16 16">
+      <rect x="6" y="1" width="4" height="5"/>
+      <rect x="4" y="8" width="8" height="7"/>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="app-shell">
 
   <!-- ============ ホーム画面 ============ -->
   <section id="screen-home" class="screen">
     <div class="hero dq-window dq-window-frame">
-      <button class="profile-chip" id="home-profile-btn">👤 <span id="home-profile-name">学習者1</span> ▾</button>
+      <button class="profile-chip" id="home-profile-btn"><svg class="nav-icon inline"><use href="#icon-person"></use></svg> <span id="home-profile-name">学習者1</span> ▾</button>
       <h1>クメール語単語帳</h1>
       <div class="sub">毎日ちょっとずつ、楽しく覚えよう</div>
       <div class="rank-title" id="home-rank-title">見習い冒険者</div>
@@ -136,11 +185,11 @@
 
   <!-- ============ 単語一覧/図鑑 ============ -->
   <section id="screen-wordlist" class="screen">
-    <h2 class="dq-window">単語図鑑</h2>
+    <h2 class="screen-title dq-window">単語図鑑</h2>
 
     <div class="card line-cta">
       <div class="line-cta-text">この258単語はYouTube動画でも紹介しています</div>
-      <a class="secondary-button" href="https://youtu.be/K6aTgOZzvIs?si=Pujhc-N81es6eGJJ" target="_blank" rel="noopener" style="text-decoration:none;">▶ 動画を見る</a>
+      <a class="secondary-button" href="https://youtu.be/K6aTgOZzvIs?si=Pujhc-N81es6eGJJ" target="_blank" rel="noopener" style="text-decoration:none;">動画を見る</a>
     </div>
 
     <div id="wordlist-stats"><!-- screens/wordlist.js が動的に描画（苦手単語の傾向） --></div>
@@ -160,11 +209,11 @@
   <!-- ============ 文法画面 ============ -->
   <section id="screen-grammar" class="screen">
     <div id="grammar-list-view">
-      <h2 class="dq-window">文法</h2>
+      <h2 class="screen-title dq-window">文法</h2>
 
       <div class="card line-cta">
         <div class="line-cta-text">この文法はYouTube動画でも解説しています</div>
-        <a class="secondary-button" href="https://youtu.be/3aC9SNkEnCI?si=jkHDpfnseD1pEHKQ" target="_blank" rel="noopener" style="text-decoration:none;">▶ 動画を見る</a>
+        <a class="secondary-button" href="https://youtu.be/3aC9SNkEnCI?si=jkHDpfnseD1pEHKQ" target="_blank" rel="noopener" style="text-decoration:none;">動画を見る</a>
       </div>
 
       <div id="grammar-topic-list"><!-- screens/grammar.js が動的に描画 --></div>
@@ -214,14 +263,14 @@
 
   <!-- ============ 実用フレーズ集画面 ============ -->
   <section id="screen-phrases" class="screen">
-    <h2 class="dq-window">実用フレーズ集</h2>
+    <h2 class="screen-title dq-window">実用フレーズ集</h2>
     <p style="font-size:12.5px; color:var(--ink-soft); padding:0 4px 10px;">Telegramチャンネル「クメール語を一緒に学ぼう！」で紹介した、実際に使えるフレーズをまとめました。</p>
     <div id="phrases-content"><!-- screens/phrases.js が動的に描画 --></div>
   </section>
 
   <!-- ============ 実績画面 ============ -->
   <section id="screen-achievements" class="screen">
-    <h2>実績・レベル</h2>
+    <h2 class="screen-title dq-window">実績・レベル</h2>
 
     <div class="filter-row" id="achievements-tabs">
       <button class="filter-chip active" data-tab="level">レベル</button>
@@ -230,10 +279,10 @@
     </div>
 
     <div id="achievements-tab-level">
-      <div class="card">
+      <div class="card dq-window">
         <div style="display:flex; justify-content:space-between; align-items:baseline;">
-          <div><span style="font-size:26px; font-weight:900; color:var(--accent);" id="ach-level">Lv.1</span></div>
-          <div style="font-size:12px; color:var(--ink-soft);" id="ach-xp">0 XP</div>
+          <div><span style="font-size:26px; font-weight:900; color:var(--dq-window-gold);" id="ach-level">Lv.1</span></div>
+          <div style="font-size:12px; color:var(--dq-window-text); opacity:0.75;" id="ach-xp">0 XP</div>
         </div>
         <div class="rank-title" id="ach-rank-title">見習い冒険者</div>
         <div class="xp-bar-track" style="margin-top:8px;"><div class="xp-bar-fill" id="ach-xp-bar" style="width:0%"></div></div>
@@ -251,9 +300,9 @@
 
   <!-- ============ ショップ・コレクション画面 ============ -->
   <section id="screen-shop" class="screen">
-    <h2>ショップ</h2>
+    <h2 class="screen-title dq-window">ショップ</h2>
 
-    <div class="card shop-gold-card">
+    <div class="card dq-window shop-gold-card">
       <div class="shop-gold-label">所持ゴールド</div>
       <div class="shop-gold-value" id="shop-gold-balance">0 🪙</div>
     </div>
@@ -264,14 +313,14 @@
     </div>
 
     <div id="shop-tab-shop">
-      <div class="card gacha-pull-card">
+      <div class="card dq-window gacha-pull-card">
         <button class="cta-button" id="gacha-pull-single-btn">ガチャを1回引く（30 🪙）</button>
         <button class="cta-button gacha-ten-btn" id="gacha-pull-ten-btn">10連ガチャを引く（300 🪙・レア以上確定）</button>
       </div>
 
       <div id="gacha-result"></div>
 
-      <div class="card">
+      <div class="card dq-window">
         <div class="gacha-rate-title">出現確率</div>
         <div id="gacha-rate-table"><!-- screens/shop.js が動的に描画 --></div>
       </div>
@@ -285,7 +334,7 @@
 
   <!-- ============ 設定画面 ============ -->
   <section id="screen-settings" class="screen">
-    <h2>設定</h2>
+    <h2 class="screen-title dq-window">設定</h2>
 
     <div class="card line-cta">
       <div class="line-cta-text">クメール語レッスンにご興味のある方は<br>お気軽にご相談ください</div>
@@ -297,7 +346,7 @@
     <button class="secondary-button app-share-btn">🤝 このアプリを友達に紹介する</button>
     <div style="height:14px;"></div>
 
-    <div class="card" id="settings-toggles-card">
+    <div class="card dq-window" id="settings-toggles-card">
       <label style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
         <span>読み仮名を表示する</span>
         <input type="checkbox" id="setting-show-reading" checked>
@@ -312,7 +361,7 @@
       </label>
     </div>
 
-    <div class="card" id="settings-scope-card">
+    <div class="card dq-window" id="settings-scope-card">
       <div style="font-weight:700; margin-bottom:8px;">出題範囲</div>
       <div class="radio-group">
         <label class="radio-option">
@@ -326,7 +375,7 @@
       </div>
     </div>
 
-    <div class="card" id="settings-session-size-card">
+    <div class="card dq-window" id="settings-session-size-card">
       <div style="font-weight:700; margin-bottom:8px;">1回の出題数</div>
       <div class="chip-radio-group" id="setting-session-size-group">
         <label class="chip-radio"><input type="radio" name="session-size" value="5"><span>5問</span></label>
@@ -338,7 +387,7 @@
       </div>
     </div>
 
-    <div class="card" id="settings-daily-goal-card">
+    <div class="card dq-window" id="settings-daily-goal-card">
       <div style="font-weight:700; margin-bottom:8px;">1日の目標問題数</div>
       <div class="chip-radio-group" id="setting-daily-goal-group">
         <label class="chip-radio"><input type="radio" name="daily-goal" value="5"><span>5問</span></label>
@@ -353,7 +402,7 @@
       </div>
     </div>
 
-    <div class="card" id="settings-feedback-card">
+    <div class="card dq-window" id="settings-feedback-card">
       <div style="font-weight:700; margin-bottom:8px;">ご意見・ご要望</div>
       <div class="feedback-rating" id="feedback-rating">
         <button type="button" class="feedback-star" data-rating="1" aria-label="星1つ">★</button>
@@ -375,7 +424,7 @@
 </div>
 
 <div id="profile-switcher-overlay" class="modal-overlay">
-  <div class="modal-panel">
+  <div class="modal-panel dq-window">
     <h3>学習者を選択</h3>
     <div id="profile-list" class="profile-list"><!-- profile-switcher.js が動的に描画 --></div>
     <button class="secondary-button" id="profile-add-btn">＋ 新しい学習者を追加</button>
@@ -398,12 +447,12 @@
 </div>
 
 <nav class="bottom-nav">
-  <a href="#home" data-screen="home"><span class="icon">🏠</span>ホーム</a>
-  <a href="#wordlist" data-screen="wordlist"><span class="icon">📖</span>図鑑</a>
-  <a href="#grammar" data-screen="grammar"><span class="icon">📝</span>文法</a>
-  <a href="#achievements" data-screen="achievements"><span class="icon">🏅</span>実績</a>
-  <a href="#shop" data-screen="shop"><span class="icon">💰</span>ショップ</a>
-  <a href="#settings" data-screen="settings"><span class="icon">⚙️</span>設定</a>
+  <a href="#home" data-screen="home"><svg class="nav-icon"><use href="#icon-home"></use></svg>ホーム</a>
+  <a href="#wordlist" data-screen="wordlist"><svg class="nav-icon"><use href="#icon-book"></use></svg>図鑑</a>
+  <a href="#grammar" data-screen="grammar"><svg class="nav-icon"><use href="#icon-grammar"></use></svg>文法</a>
+  <a href="#achievements" data-screen="achievements"><svg class="nav-icon"><use href="#icon-medal"></use></svg>実績</a>
+  <a href="#shop" data-screen="shop"><svg class="nav-icon"><use href="#icon-coin"></use></svg>ショップ</a>
+  <a href="#settings" data-screen="settings"><svg class="nav-icon"><use href="#icon-gear"></use></svg>設定</a>
 </nav>
 
 <script src="data/words.js"></script>

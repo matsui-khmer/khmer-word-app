@@ -41,7 +41,7 @@ function renderAchievementsScreen() {
   grid.innerHTML = BADGE_DEFINITIONS.map((b) => {
     const earned = user.badges.includes(b.id);
     return `
-      <div class="badge-tile ${earned ? "" : "locked"}">
+      <div class="badge-tile dq-window ${earned ? "" : "locked"}">
         <div class="icon">${b.icon}</div>
         <div class="name">${b.name}</div>
       </div>
@@ -54,7 +54,7 @@ function renderAchievementsScreen() {
     const levelEnd = levelStart + RANK_TITLE_LEVEL_STEP - 1;
     const reached = user.level >= levelStart;
     return `
-      <div class="title-row ${reached ? "reached" : "locked"}">
+      <div class="title-row dq-window ${reached ? "reached" : "locked"}">
         <div class="title-level">Lv.${levelStart}-${levelEnd}</div>
         <div class="title-name">${reached ? title : "？？？"}</div>
       </div>

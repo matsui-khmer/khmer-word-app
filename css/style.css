@@ -255,21 +255,15 @@ button {
   border: 3px solid var(--dq-window-gold);
   border-radius: 10px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  color: var(--dq-window-text);
 }
 .card.dq-window .card-label-row { color: var(--dq-window-text); opacity: 0.85; }
 .card.dq-window .xp-bar-track { background: rgba(255, 255, 255, 0.18); }
+.card.dq-window .rank-title { background: rgba(255, 255, 255, 0.14); color: var(--dq-window-gold); }
 
-/* スタートボタンは「情報を表示するウィンドウ」群とはあえて違う形にし、
-   押すべきアクションだと一目でわかるように金色の丸ボタンにする */
-#home-start-btn.dq-window {
-  background: var(--dq-window-gold);
-  border: none;
-  border-radius: 999px;
-  color: var(--dq-window-bg-2);
-  font-weight: 900;
-  font-family: 'DotGothic16', 'Zen Maru Gothic', sans-serif;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-}
+/* ホームの主CTAは、押すべきアクションだと一目でわかるように▶プレフィックスを付ける
+   （塗り色・フォントは.cta-buttonの基本スタイルに統合済み） */
+#home-start-btn.dq-window { font-weight: 900; }
 #home-start-btn.dq-window::before {
   content: "▶ ";
   position: static;
@@ -277,12 +271,8 @@ button {
   border: none;
   border-radius: 0;
 }
-#home-start-btn.dq-window:disabled {
-  background: var(--border);
-  color: var(--ink-soft);
-}
 
-#screen-wordlist h2.dq-window {
+.screen-title.dq-window {
   display: inline-block;
   background: linear-gradient(180deg, var(--dq-window-bg) 0%, var(--dq-window-bg-2) 100%);
   border: 3px solid var(--dq-window-gold);
@@ -319,7 +309,7 @@ button {
 .hero h1 {
   font-size: 34px;
   font-family: 'DotGothic16', 'Zen Maru Gothic', sans-serif;
-  color: var(--accent-strong);
+  color: var(--gold);
   letter-spacing: 2px;
   margin: 6px 0 8px;
   line-height: 1.25;
@@ -348,8 +338,8 @@ button {
   display: inline-block;
   font-size: 12px;
   font-weight: 700;
-  color: var(--accent-strong);
-  background: var(--accent-soft);
+  color: var(--gold);
+  background: var(--gold-soft);
   padding: 2px 12px;
   border-radius: 999px;
   margin-top: 4px;
@@ -377,7 +367,7 @@ button {
 .stat-tile .value {
   font-size: 20px;
   font-weight: 700;
-  color: var(--accent-strong);
+  color: var(--gold);
 }
 .stat-tile .label {
   font-size: 11px;
@@ -406,8 +396,9 @@ button {
   padding: 15px;
   font-size: 16px;
   font-weight: 700;
-  color: #fff;
-  background: var(--accent-strong);
+  font-family: 'DotGothic16', 'Zen Maru Gothic', sans-serif;
+  color: var(--dq-window-bg-2);
+  background: var(--dq-window-gold);
   box-shadow: var(--shadow);
 }
 .cta-button:active { transform: scale(0.98); }
@@ -416,17 +407,35 @@ button {
   color: var(--ink-soft);
   box-shadow: none;
 }
+.card.dq-window .cta-button:disabled {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(247, 245, 238, 0.5);
+}
 
+/* 副次コマンド行: 主CTA(ピル)ともタグとも違う、選べば実行される「コマンド」だとわかる形。
+   ホバー/フォーカス時に choice-btn と同じ金の▶カーソルを出す */
 .secondary-button {
+  position: relative;
   display: block;
   width: 100%;
   border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 12px;
+  border-radius: 12px;
+  padding: 12px 12px 12px 26px;
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   background: var(--card);
+  text-align: left;
+}
+.secondary-button:hover:not(:disabled)::before,
+.secondary-button:focus-visible::before {
+  content: "▶";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold);
+  animation: dq-cursor-blink 0.8s steps(2) infinite;
 }
 
 /* ---------- フィードバック ---------- */
@@ -455,6 +464,14 @@ button {
   margin-bottom: 10px;
 }
 .feedback-status { font-size: 12px; color: var(--ink-soft); margin-top: 6px; min-height: 16px; }
+.card.dq-window .feedback-star { color: rgba(255, 255, 255, 0.3); }
+.card.dq-window #feedback-message {
+  background: rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: var(--dq-window-text);
+}
+.card.dq-window #feedback-message::placeholder { color: rgba(247, 245, 238, 0.5); }
+.card.dq-window .feedback-status { color: var(--dq-window-text); opacity: 0.7; }
 
 /* ---------- レッスン集客用LINE導線 ---------- */
 .line-cta {
@@ -589,7 +606,7 @@ button {
   left: 8px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--accent-strong);
+  color: var(--gold);
   animation: dq-cursor-blink 0.8s steps(2) infinite;
 }
 .choice-btn.correct {
@@ -647,8 +664,8 @@ button {
   justify-content: center;
 }
 .matching-tile.selected {
-  border-color: var(--accent-strong);
-  background: var(--accent-soft);
+  border-color: var(--dq-window-gold);
+  background: var(--gold-soft);
 }
 .matching-tile.matched {
   border-color: var(--success);
@@ -777,7 +794,7 @@ button {
 .phrase-card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-left: 5px solid var(--accent-strong);
+  border-left: 5px solid var(--gold);
   border-radius: 14px;
   padding: 10px 14px;
   margin-bottom: 10px;
@@ -799,7 +816,7 @@ button {
 .category-title {
   font-size: 14px;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--gold);
   margin-bottom: 8px;
   padding-left: 4px;
 }
@@ -844,8 +861,8 @@ button {
 .word-tile .core70-tag {
   display: inline-block;
   font-size: 9px;
-  color: var(--accent-strong);
-  border: 1px solid var(--accent-soft);
+  color: var(--gold);
+  border: 1px solid var(--gold-soft);
   border-radius: 999px;
   padding: 0 6px;
   margin-top: 4px;
@@ -868,9 +885,10 @@ button {
   color: var(--ink-soft);
 }
 .filter-chip.active {
-  background: var(--accent-strong);
-  color: #fff;
+  background: var(--dq-window-gold);
+  color: var(--dq-window-bg-2);
   border-color: transparent;
+  font-weight: 700;
 }
 
 /* ---------- 実績画面 ---------- */
@@ -889,6 +907,12 @@ button {
 .badge-tile.locked { opacity: 0.35; filter: grayscale(1); }
 .badge-tile .icon { font-size: 26px; }
 .badge-tile .name { font-size: 11px; margin-top: 4px; color: var(--ink); }
+.badge-tile.dq-window {
+  background: linear-gradient(180deg, var(--dq-window-bg) 0%, var(--dq-window-bg-2) 100%);
+  border: 2px solid var(--dq-window-gold);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+.badge-tile.dq-window .name { color: var(--dq-window-text); }
 
 .shop-gold-card {
   display: flex;
@@ -897,6 +921,8 @@ button {
 }
 .shop-gold-label { font-size: 13px; color: var(--ink-soft); }
 .shop-gold-value { font-size: 24px; font-weight: 900; color: var(--gold); }
+.card.dq-window .shop-gold-label { color: var(--dq-window-text); opacity: 0.75; }
+.card.dq-window .shop-gold-value { color: var(--dq-window-gold); }
 
 .shop-item-rarity {
   display: inline-block;
@@ -964,6 +990,9 @@ button {
 }
 .gacha-rate-percent { font-size: 12px; color: var(--ink-soft); }
 .gacha-rate-names { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+.card.dq-window .gacha-rate-title { color: var(--dq-window-text); }
+.card.dq-window .gacha-rate-percent,
+.card.dq-window .gacha-rate-names { color: var(--dq-window-text); opacity: 0.75; }
 
 .collection-summary {
   font-size: 13px;
@@ -973,6 +1002,8 @@ button {
 }
 .badge-tile.item-tile .item-count { font-size: 11px; font-weight: 700; color: var(--gold); margin-top: 2px; }
 .badge-tile.item-tile .item-desc { font-size: 10px; color: var(--ink-soft); margin-top: 3px; line-height: 1.4; }
+.badge-tile.dq-window.item-tile .item-count { color: var(--dq-window-gold); }
+.badge-tile.dq-window.item-tile .item-desc { color: var(--dq-window-text); opacity: 0.75; }
 
 .title-list { display: flex; flex-direction: column; gap: 8px; }
 .title-row {
@@ -989,11 +1020,18 @@ button {
   font-family: 'DotGothic16', 'Zen Maru Gothic', sans-serif;
   font-size: 13px;
   font-weight: 700;
-  color: var(--accent-strong);
+  color: var(--gold);
   min-width: 44px;
 }
 .title-row.reached .title-name { color: var(--ink); font-weight: 700; }
 .title-row.locked .title-name { color: var(--ink-soft); }
+.title-row.dq-window {
+  background: linear-gradient(180deg, var(--dq-window-bg) 0%, var(--dq-window-bg-2) 100%);
+  border: 2px solid var(--dq-window-gold);
+}
+.title-row.dq-window .title-level { color: var(--dq-window-gold); }
+.title-row.dq-window .title-name { color: var(--dq-window-text); }
+.title-row.dq-window.locked .title-name { color: var(--dq-window-text); opacity: 0.55; }
 
 /* ---------- 学習者切り替えオーバーレイ ---------- */
 .modal-overlay {
@@ -1018,6 +1056,12 @@ button {
   font-size: 16px;
   margin: 0 0 12px;
 }
+.modal-panel.dq-window {
+  background: linear-gradient(180deg, var(--dq-window-bg) 0%, var(--dq-window-bg-2) 100%);
+  border: 4px solid var(--dq-window-gold);
+  color: var(--dq-window-text);
+}
+.modal-panel.dq-window h3 { color: var(--dq-window-gold); font-family: 'DotGothic16', 'Zen Maru Gothic', sans-serif; }
 
 /* 実際の画面を操作しながら進めるチュートリアル（対象要素だけ明るく見せるスポットライト演出） */
 .tutorial-overlay {
@@ -1125,8 +1169,8 @@ button {
   padding: 4px 6px;
 }
 .profile-row.current {
-  border-color: var(--accent-strong);
-  background: var(--accent-soft);
+  border-color: var(--dq-window-gold);
+  background: rgba(232, 198, 90, 0.18);
 }
 .profile-select-btn {
   flex: 1;
@@ -1146,6 +1190,10 @@ button {
   flex-shrink: 0;
 }
 .profile-icon-btn:hover { background: var(--card-soft); }
+.modal-panel.dq-window .profile-row { border-color: rgba(255, 255, 255, 0.3); }
+.modal-panel.dq-window .profile-select-btn { color: var(--dq-window-text); }
+.modal-panel.dq-window .profile-select-btn:hover { color: var(--dq-window-gold); }
+.modal-panel.dq-window .profile-icon-btn:hover { background: rgba(255, 255, 255, 0.12); }
 
 /* ---------- 下部ナビ ---------- */
 .bottom-nav {
@@ -1165,8 +1213,21 @@ button {
   color: var(--ink-soft);
   text-decoration: none;
 }
-.bottom-nav a .icon { display: block; font-size: 18px; margin-bottom: 2px; }
-.bottom-nav a.active { color: var(--accent-strong); font-weight: 700; }
+.bottom-nav a.active { color: var(--gold); font-weight: 700; }
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  margin: 0 auto 2px;
+  fill: currentColor;
+}
+.nav-icon.inline {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  margin: 0;
+  vertical-align: -2px;
+}
 
 /* ---------- 文法画面 ---------- */
 .grammar-topic-tile {
@@ -1177,6 +1238,8 @@ button {
   border-left: 5px solid var(--border);
 }
 .grammar-topic-tile.completed { border-left-color: var(--success); }
+.grammar-topic-tile:hover,
+.grammar-topic-tile:focus-visible { background: var(--card-soft); }
 .grammar-topic-tile .grammar-topic-icon { font-size: 24px; }
 .grammar-topic-tile .grammar-topic-order { font-size: 11px; color: var(--ink-soft); }
 .grammar-topic-tile .grammar-topic-title { font-size: 15px; font-weight: 700; color: var(--ink); }
@@ -1223,7 +1286,7 @@ button {
 .reorder-chip .khmer { font-family: 'Noto Sans Khmer', sans-serif; font-size: 18px; line-height: 1.2; }
 .reorder-chip-reading { font-size: 10px; font-weight: 700; opacity: 0.85; white-space: nowrap; }
 .reorder-chip.in-bank { background: var(--card-soft); color: var(--ink); border: 1px solid var(--border); }
-.reorder-chip.in-answer { background: var(--accent-strong); color: #fff; }
+.reorder-chip.in-answer { background: var(--dq-window-gold); color: var(--dq-window-bg-2); }
 .reorder-chip.correct { background: var(--success); color: #fff; }
 .reorder-chip.incorrect { background: var(--danger); color: #fff; }
 .reorder-chip-punct {
@@ -1345,7 +1408,7 @@ button {
   content: "▶";
   position: absolute;
   left: -2px;
-  color: var(--accent-strong);
+  color: var(--dq-window-gold);
 }
 
 /* ---------- 設定画面: チップ型ラジオ選択（選択肢が多い項目を省スペースに） ---------- */
@@ -1374,13 +1437,13 @@ button {
   font-size: 13px;
 }
 .chip-radio input:checked + span {
-  background: var(--accent-strong);
-  color: #fff;
+  background: var(--dq-window-gold);
+  color: var(--dq-window-bg-2);
   border-color: transparent;
   font-weight: 700;
 }
 .chip-radio input:focus-visible + span {
-  outline: 2px solid var(--accent-strong);
+  outline: 2px solid var(--gold);
   outline-offset: 2px;
 }
 

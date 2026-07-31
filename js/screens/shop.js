@@ -96,7 +96,7 @@ function renderShopScreen() {
     const count = itemCounts[item.id] || 0;
     const owned = count > 0;
     return `
-      <div class="badge-tile item-tile ${owned ? "" : "locked"}">
+      <div class="badge-tile dq-window item-tile ${owned ? "" : "locked"}">
         <div class="icon">${owned ? item.icon : "？"}</div>
         <div class="name">${owned ? item.name : "？？？"}</div>
         ${owned ? `<div class="item-count">×${count}</div>` : ""}
