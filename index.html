@@ -205,7 +205,11 @@
     </div>
     <div id="wordlist-content"><!-- screens/wordlist.js が動的に描画 --></div>
     <button class="wordlist-index-toggle" id="wordlist-index-toggle" aria-label="索引を開く">索引</button>
-    <div class="wordlist-index-rail" id="wordlist-index-rail"><!-- screens/wordlist.js が動的に描画 --></div>
+    <div class="wordlist-index-backdrop" id="wordlist-index-backdrop"></div>
+    <div class="wordlist-index-rail" id="wordlist-index-rail">
+      <div class="wordlist-index-grid" id="wordlist-index-grid-main"><!-- screens/wordlist.js が動的に描画 --></div>
+      <div class="wordlist-index-grid wordlist-index-grid-tail" id="wordlist-index-grid-tail"><!-- screens/wordlist.js が動的に描画 --></div>
+    </div>
   </section>
 
   <!-- ============ 文法画面 ============ -->

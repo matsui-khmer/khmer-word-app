@@ -16,13 +16,75 @@ function initWordlistScreen() {
   document.getElementById("wordlist-index-toggle").addEventListener("click", () => {
     toggleWordlistIndexRail();
   });
+  document.getElementById("wordlist-index-backdrop").addEventListener("click", () => {
+    toggleWordlistIndexRail(false);
+  });
+
+  // レール本体へのイベント配線は再描画のたびにボタンが作り直されても壊れないよう、
+  // ここで一度だけ行う（対象のボタンはクリック時に都度DOMから探す）
+  const railContainer = document.getElementById("wordlist-index-rail");
+  const railTip = document.createElement("div");
+  railTip.className = "wordlist-rail-tip khmer";
+  railContainer.appendChild(railTip);
+
+  let railDragging = false;
+  function railButtonAtPoint(x, y) {
+    return Array.from(railContainer.querySelectorAll("button")).find((btn) => {
+      const r = btn.getBoundingClientRect();
+      return y >= r.top && y <= r.bottom && x >= r.left && x <= r.right;
+    });
+  }
+  function handleRailPointer(clientX, clientY) {
+    const btn = railButtonAtPoint(clientX, clientY);
+    if (!btn) return;
+    railTip.textContent = wordlistRailLabel(btn.dataset.cat);
+    railTip.style.display = "flex";
+    const railRect = railContainer.getBoundingClientRect();
+    const btnRect = btn.getBoundingClientRect();
+    railTip.style.left = (btnRect.left + btnRect.width / 2 - railRect.left) + "px";
+    railTip.style.top = (btnRect.top - railRect.top) + "px";
+    jumpToWordlistCategory(btn.dataset.cat);
+  }
+  railContainer.addEventListener("pointerdown", (e) => {
+    railDragging = true;
+    railContainer.setPointerCapture(e.pointerId);
+    handleRailPointer(e.clientX, e.clientY);
+  });
+  railContainer.addEventListener("pointermove", (e) => {
+    if (!railDragging) return;
+    handleRailPointer(e.clientX, e.clientY);
+  });
+  railContainer.addEventListener("pointerup", () => {
+    railDragging = false;
+    railTip.style.display = "none";
+    toggleWordlistIndexRail(false);
+  });
+  railContainer.addEventListener("pointercancel", () => {
+    railDragging = false;
+    railTip.style.display = "none";
+  });
+}
+
+// 「独立体母音字」は子音1文字とは違い長い文字列なので、レール上だけ短縮表示する
+function wordlistRailLabel(cat) {
+  return cat === "独立体母音字" ? "母" : cat;
+}
+
+function jumpToWordlistCategory(cat) {
+  // sticky状態の見出し自体ではなく、通常配置のセクション枠を基準にスクロールする
+  // （見出しは自分のセクション末尾に貼り付いた位置に残っていることがあり、
+  // それを基準にすると本来の先頭ではなくセクションの終わり際に着地してしまうため）
+  const section = document.querySelector(`#wordlist-content .wordlist-cat-section[data-cat="${cat}"]`);
+  if (section) section.scrollIntoView({ block: "start" });
 }
 
 function toggleWordlistIndexRail(forceOpen) {
   const rail = document.getElementById("wordlist-index-rail");
   const toggleBtn = document.getElementById("wordlist-index-toggle");
+  const backdrop = document.getElementById("wordlist-index-backdrop");
   const open = forceOpen !== undefined ? forceOpen : !rail.classList.contains("open");
   rail.classList.toggle("open", open);
+  backdrop.classList.toggle("open", open);
   toggleBtn.classList.toggle("active", open);
   toggleBtn.setAttribute("aria-label", open ? "索引を閉じる" : "索引を開く");
 }
@@ -119,7 +181,8 @@ function renderWordlistScreen() {
 
   if (categories.length === 0) {
     container.innerHTML = `<div class="card" style="text-align:center; color:var(--ink-soft);">該当する単語がありません</div>`;
-    railContainer.innerHTML = "";
+    document.getElementById("wordlist-index-grid-main").innerHTML = "";
+    document.getElementById("wordlist-index-grid-tail").innerHTML = "";
     return;
   }
 
@@ -159,68 +222,19 @@ function renderWordlistScreen() {
     })
     .join("");
 
-  // 「独立体母音字」は子音1文字とは違い長い文字列なので、レール上だけ短縮表示する
-  const railLabel = (cat) => (cat === "独立体母音字" ? "母" : cat);
+  // クメール語の子音表と同じ「横5文字」の並びを再現する: 先頭25個は5列×5行、
+  // 残りは4列で（データ数が33に満たない場合は最終行が4個未満になる）
+  const railBtnHtml = (cat) => `<button data-cat="${cat}" class="khmer">${wordlistRailLabel(cat)}</button>`;
+  const gridMain = document.getElementById("wordlist-index-grid-main");
+  const gridTail = document.getElementById("wordlist-index-grid-tail");
+  gridMain.innerHTML = categories.slice(0, 25).map(railBtnHtml).join("");
+  gridTail.innerHTML = categories.slice(25).map(railBtnHtml).join("");
 
-  railContainer.innerHTML = categories
-    .map((cat) => `<button data-cat="${cat}" class="khmer">${railLabel(cat)}</button>`)
-    .join("");
-
-  function jumpToCategory(cat) {
-    // sticky状態の見出し自体ではなく、通常配置のセクション枠を基準にスクロールする
-    // （見出しは自分のセクション末尾に貼り付いた位置に残っていることがあり、
-    // それを基準にすると本来の先頭ではなくセクションの終わり際に着地してしまうため）
-    const section = container.querySelector(`.wordlist-cat-section[data-cat="${cat}"]`);
-    if (section) section.scrollIntoView({ block: "start" });
-  }
-
-  const railButtons = Array.from(railContainer.querySelectorAll("button"));
-  railButtons.forEach((btn) => {
+  railContainer.querySelectorAll("button").forEach((btn) => {
     btn.addEventListener("click", () => {
-      jumpToCategory(btn.dataset.cat);
+      jumpToWordlistCategory(btn.dataset.cat);
       toggleWordlistIndexRail(false);
     });
-  });
-
-  // 指をレール上で滑らせている間、通過した文字へ連続してジャンプできるようにする
-  // （iOSの連絡先アプリの索引と同じ「なぞって移動」操作）
-  let railDragging = false;
-  function railButtonAtPoint(x, y) {
-    return railButtons.find((btn) => {
-      const r = btn.getBoundingClientRect();
-      return y >= r.top && y <= r.bottom && x >= r.left && x <= r.right;
-    });
-  }
-  function handleRailPointer(clientX, clientY) {
-    const btn = railButtonAtPoint(clientX, clientY);
-    if (!btn) return;
-    railTip.textContent = railLabel(btn.dataset.cat);
-    railTip.style.display = "flex";
-    const railRect = railContainer.getBoundingClientRect();
-    railTip.style.top = (btn.getBoundingClientRect().top - railRect.top) + "px";
-    jumpToCategory(btn.dataset.cat);
-  }
-  const railTip = document.createElement("div");
-  railTip.className = "wordlist-rail-tip khmer";
-  railContainer.appendChild(railTip);
-
-  railContainer.addEventListener("pointerdown", (e) => {
-    railDragging = true;
-    railContainer.setPointerCapture(e.pointerId);
-    handleRailPointer(e.clientX, e.clientY);
-  });
-  railContainer.addEventListener("pointermove", (e) => {
-    if (!railDragging) return;
-    handleRailPointer(e.clientX, e.clientY);
-  });
-  railContainer.addEventListener("pointerup", () => {
-    railDragging = false;
-    railTip.style.display = "none";
-    toggleWordlistIndexRail(false);
-  });
-  railContainer.addEventListener("pointercancel", () => {
-    railDragging = false;
-    railTip.style.display = "none";
   });
 
   const toggleBtn = document.getElementById("wordlist-index-toggle");
@@ -231,13 +245,10 @@ function renderWordlistScreen() {
         if (!entry.isIntersecting) return;
         const cat = entry.target.dataset.cat;
         railContainer.querySelectorAll("button").forEach((b) => b.classList.toggle("active", b.dataset.cat === cat));
-        if (!rail_isOpen()) toggleBtn.textContent = railLabel(cat);
+        if (!railContainer.classList.contains("open")) toggleBtn.textContent = wordlistRailLabel(cat);
       });
     },
     { rootMargin: "0px 0px -80% 0px" }
   );
-  function rail_isOpen() {
-    return railContainer.classList.contains("open");
-  }
   container.querySelectorAll(".wordlist-cat-header").forEach((header) => wordlistSectionObserver.observe(header));
 }

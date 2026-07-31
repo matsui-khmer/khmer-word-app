@@ -859,9 +859,9 @@ button {
   padding-left: 20px;
 }
 
-/* 索引レール: 普段は右端の小さな取っ手だけを表示し、ワンタップで全カテゴリーが
-   収まる縦長パネルを開閉する。開いている間は画面のほぼ全高を使い、30カテゴリー
-   すべてがスクロールなしで収まるようflexで均等割りする */
+/* 索引: 普段は右下の小さな取っ手だけを表示し、ワンタップで中央に
+   クメール語の子音表と同じ「横5文字」の表組みパネルを開閉する。
+   一括表示なので縦長にする必要はなく、大きな文字のまま画面中央に収める */
 .wordlist-index-toggle {
   position: fixed;
   right: 4px;
@@ -880,61 +880,75 @@ button {
 }
 .wordlist-index-toggle.active { background: var(--dq-window-gold); color: var(--dq-window-bg-2); border-color: transparent; }
 
+.wordlist-index-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  background: rgba(0, 0, 0, 0.45);
+}
+.wordlist-index-backdrop.open { display: block; }
+
 .wordlist-index-rail {
   display: none;
   position: fixed;
-  right: 4px;
-  top: 64px;
-  bottom: 90px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 5;
+  width: min(380px, 94vw);
   flex-direction: column;
-  gap: 0;
-  overflow-y: auto;
+  gap: 8px;
   background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 8px 2px;
-  box-shadow: var(--shadow);
-  scrollbar-width: none;
+  border: 3px solid var(--dq-window-gold);
+  border-radius: 18px;
+  padding: 14px 10px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
   touch-action: none; /* なぞり操作をページのスクロールと衝突させない */
   user-select: none;
 }
 .wordlist-index-rail.open { display: flex; }
-.wordlist-index-rail::-webkit-scrollbar { display: none; }
+
+.wordlist-index-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+.wordlist-index-grid-tail {
+  grid-template-columns: repeat(4, minmax(44px, 70px));
+  justify-content: center;
+}
 .wordlist-index-rail button {
-  flex: 1 1 0;
-  min-height: 16px;
+  aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
-  background: none;
+  background: var(--card-soft);
   font-family: 'Noto Sans Khmer', sans-serif;
-  font-size: 16px;
+  font-size: clamp(30px, 9vw, 48px);
   font-weight: 700;
   color: var(--ink-soft);
-  padding: 0 8px;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
 }
-.wordlist-index-rail button.active { background: var(--gold-soft); color: var(--gold); }
+.wordlist-index-rail button.active { background: var(--dq-window-gold); color: var(--dq-window-bg-2); }
 
 .wordlist-rail-tip {
   display: none;
   position: absolute;
-  right: 46px;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: var(--dq-window-gold);
   color: var(--dq-window-bg-2);
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 900;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
   pointer-events: none;
-  transform: translateY(-50%);
+  transform: translate(-50%, -115%);
 }
 
 .filter-row {
