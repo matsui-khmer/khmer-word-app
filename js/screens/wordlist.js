@@ -85,9 +85,12 @@ function renderWordlistStats() {
   `;
 }
 
+let wordlistSectionObserver = null;
+
 function renderWordlistScreen() {
   renderWordlistStats();
   const container = document.getElementById("wordlist-content");
+  const railContainer = document.getElementById("wordlist-index-rail");
   const grouped = {};
 
   App.words.forEach((word) => {
@@ -103,42 +106,64 @@ function renderWordlistScreen() {
 
   if (categories.length === 0) {
     container.innerHTML = `<div class="card" style="text-align:center; color:var(--ink-soft);">該当する単語がありません</div>`;
+    railContainer.innerHTML = "";
     return;
   }
 
   container.innerHTML = categories
     .map((cat) => {
       const items = grouped[cat];
-      const tiles = items
+      const rows = items
         .map(({ word, record }) => {
           const rank = srsComprehensionRank(record);
           const rankMeta = SRS_COMPREHENSION_RANK_META[rank];
           const readingHtml = word.reading
-            ? `<div class="reading-tag">${readingWithIpaHtml(word)}</div>`
+            ? `<span class="row-reading">${readingWithIpaHtml(word)}</span>`
             : "";
           const audioBtnHtml = hasWordAudio(word.id)
             ? `<button class="audio-btn small" data-audio="${word.id}" aria-label="発音を聞く">🔊</button>`
             : "";
           return `
-            <div class="word-tile dq-window rank-${rank}">
-              <div class="rank-icon" title="${rankMeta.label}">${rankMeta.icon}</div>
-              <div class="km-row">
-                <div class="km khmer">${word.khmer}</div>
+            <div class="wordlist-row rank-${rank}">
+              <div class="wordlist-row-main">
+                <span class="row-rank-icon" title="${rankMeta.label}">${rankMeta.icon}</span>
+                <span class="row-khmer khmer">${word.khmer}</span>
+                ${readingHtml}
                 ${audioBtnHtml}
+                ${word.isCore70 ? '<span class="row-core70" title="超重要70選">70選</span>' : ""}
               </div>
-              ${readingHtml}
-              <div class="jp">${word.meaning}</div>
-              ${word.isCore70 ? '<div class="core70-tag">70選</div>' : ""}
+              <div class="wordlist-row-meaning">${word.meaning}</div>
             </div>
           `;
         })
         .join("");
       return `
-        <div class="category-block">
-          <div class="category-title">【${cat}】 ${items.length}語</div>
-          <div class="word-grid">${tiles}</div>
-        </div>
+        <div class="wordlist-cat-header" data-cat="${cat}">【${cat}】 ${items.length}語</div>
+        ${rows}
       `;
     })
     .join("");
+
+  railContainer.innerHTML = categories
+    .map((cat) => `<button data-cat="${cat}">${cat}</button>`)
+    .join("");
+  railContainer.querySelectorAll("button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const header = container.querySelector(`.wordlist-cat-header[data-cat="${btn.dataset.cat}"]`);
+      if (header) header.scrollIntoView({ block: "start" });
+    });
+  });
+
+  if (wordlistSectionObserver) wordlistSectionObserver.disconnect();
+  wordlistSectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const cat = entry.target.dataset.cat;
+        railContainer.querySelectorAll("button").forEach((b) => b.classList.toggle("active", b.dataset.cat === cat));
+      });
+    },
+    { rootMargin: "0px 0px -80% 0px" }
+  );
+  container.querySelectorAll(".wordlist-cat-header").forEach((header) => wordlistSectionObserver.observe(header));
 }

@@ -284,19 +284,6 @@ button {
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
 }
 
-.word-tile.dq-window {
-  background: linear-gradient(180deg, var(--dq-window-bg) 0%, var(--dq-window-bg-2) 100%);
-  border-top: 1px solid var(--dq-window-gold);
-  border-right: 1px solid var(--dq-window-gold);
-  border-bottom: 1px solid var(--dq-window-gold);
-  /* border-leftの色は理解度ランク（.rank-N）側の指定を活かすため、ここでは変更しない */
-}
-.word-tile.dq-window .km { color: var(--dq-window-text); }
-.word-tile.dq-window .reading-tag { background: rgba(255, 255, 255, 0.16); color: var(--dq-window-text); }
-.word-tile.dq-window .jp { color: var(--dq-window-text); opacity: 0.8; }
-.word-tile.dq-window .core70-tag { border-color: rgba(255, 255, 255, 0.35); color: var(--dq-window-gold); }
-.word-tile.dq-window .rank-icon { filter: drop-shadow(0 0 2px rgba(0,0,0,0.6)); }
-
 /* ---------- ホーム画面 ---------- */
 .hero {
   background: linear-gradient(160deg, var(--card-soft) 0%, var(--paper) 85%);
@@ -820,53 +807,87 @@ button {
   margin-bottom: 8px;
   padding-left: 4px;
 }
-.word-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+
+/* ---------- 単語図鑑: 密なリスト＋索引レール ---------- */
+.wordlist-cat-header {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--dq-window-gold);
+  color: var(--dq-window-bg-2);
+  font-size: 12px;
+  font-weight: 900;
+  padding: 5px 12px;
+  border-radius: 8px;
+  margin: 16px 0 4px;
 }
-.word-tile {
-  position: relative;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-left: 5px solid var(--border);
-  border-radius: 14px;
-  padding: 8px 10px;
+.wordlist-cat-header:first-child { margin-top: 0; }
+
+.wordlist-row {
+  padding: 9px 4px 9px 8px;
+  border-bottom: 1px solid var(--border);
+  border-left: 3px solid var(--border);
 }
-.word-tile .rank-icon { position: absolute; top: 6px; right: 8px; font-size: 12px; }
-.word-tile .km-row {
+.wordlist-row.rank-2 { border-left-color: var(--danger); }
+.wordlist-row.rank-3 { border-left-color: var(--gold); }
+.wordlist-row.rank-4 { border-left-color: var(--accent-strong); }
+.wordlist-row.rank-5 { border-left-color: var(--success); }
+.wordlist-row-main {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
   gap: 6px;
-  padding-right: 16px;
 }
-.word-tile.rank-1 { border-left-color: var(--ink-soft); }
-.word-tile.rank-2 { border-left-color: var(--danger); }
-.word-tile.rank-3 { border-left-color: var(--gold); }
-.word-tile.rank-4 { border-left-color: var(--accent-strong); }
-.word-tile.rank-5 { border-left-color: var(--success); }
-.word-tile .km { font-size: 17px; font-weight: 600; color: var(--ink); }
-.word-tile .reading-tag {
-  display: inline-block;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--ink);
-  background: var(--card-soft);
-  padding: 1px 8px;
-  border-radius: 999px;
-  margin-top: 2px;
-}
-.word-tile .jp { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
-.word-tile .core70-tag {
-  display: inline-block;
+.wordlist-row-main .row-rank-icon { flex-shrink: 0; font-size: 12px; }
+.wordlist-row-main .row-khmer { font-size: 17px; font-weight: 600; color: var(--ink); }
+.wordlist-row-main .row-reading { font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+.wordlist-row-main .audio-btn { margin-left: 1px; }
+.wordlist-row-main .row-core70 {
+  margin-left: auto;
+  flex-shrink: 0;
   font-size: 9px;
+  font-weight: 700;
   color: var(--gold);
   border: 1px solid var(--gold-soft);
   border-radius: 999px;
   padding: 0 6px;
-  margin-top: 4px;
 }
+.wordlist-row-meaning {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+  padding-left: 20px;
+}
+
+.wordlist-index-rail {
+  position: fixed;
+  right: 4px;
+  bottom: 84px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  max-height: 34vh;
+  overflow-y: auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px 3px;
+  box-shadow: var(--shadow);
+  scrollbar-width: none;
+}
+.wordlist-index-rail::-webkit-scrollbar { display: none; }
+.wordlist-index-rail button {
+  border: none;
+  background: none;
+  font-family: 'Noto Sans Khmer', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  padding: 1.5px 4px;
+  cursor: pointer;
+}
+.wordlist-index-rail button.active { color: var(--gold); }
 
 .filter-row {
   display: flex;
