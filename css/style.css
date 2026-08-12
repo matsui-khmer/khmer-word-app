@@ -1396,6 +1396,9 @@ button {
   margin: 0 auto;
   /* 端末下部のジェスチャーバー等に食い込まないよう、実際のタップ領域を内側に確保する */
   padding-bottom: max(6px, env(safe-area-inset-bottom));
+  /* 図鑑画面のsticky見出し(z-index:3)や索引ボタン(z-index:6)より必ず手前に描画されるようにする
+     （明示的なz-indexを持たないとDOM順・描画順の都合でこれらの裏に隠れてしまうことがあった） */
+  z-index: 10;
 }
 .bottom-nav a {
   flex: 1;
