@@ -146,6 +146,7 @@ function initApp() {
 
   initHomeScreen();
   initQuizScreen();
+  initQuizLeaveGuard();
   initResultScreen();
   initWordlistScreen();
   initGrammarScreen();

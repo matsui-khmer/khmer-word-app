@@ -35,6 +35,33 @@ function initQuizScreen() {
   });
 }
 
+// クイズの最中に図鑑・文法など他の画面へのリンクを誤ってタップしても即座に離脱しないよう、
+// 確認ダイアログを挟む（「中断してホームへ」ボタンは本人の明示的な操作なのでここでは対象外）
+function initQuizLeaveGuard() {
+  document.addEventListener(
+    "click",
+    (e) => {
+      if (currentScreenNameFromHash() !== "quiz" || !App.session) return;
+      const link = e.target.closest('a[href^="#"]');
+      if (!link) return;
+      const targetScreen = link.getAttribute("href").slice(1) || "home";
+      if (targetScreen === "quiz") return;
+
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if (!confirm("学習を中断しますがよろしいですか？")) return;
+
+      if (App.session.index > 0) {
+        recordSessionTime(App.session);
+        saveUserState(App.user);
+      }
+      App.session = null;
+      navigateTo(targetScreen);
+    },
+    true
+  );
+}
+
 function recordSessionTime(session) {
   const elapsedMinutes = Math.min((Date.now() - session.startedAt) / 60000, SRS_SESSION_MAX_MINUTES_CAP);
   App.user.totalStudyMinutes = (App.user.totalStudyMinutes || 0) + elapsedMinutes;

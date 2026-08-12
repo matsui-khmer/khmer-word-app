@@ -1,6 +1,9 @@
 // 単語一覧・図鑑画面
 
 let wordlistCurrentFilter = "all";
+// カテゴリーごとの開閉状態（アコーディオン）。フィルター切り替えや再描画をまたいでも
+// ユーザーが開いたカテゴリーは開いたままにしたいので、モジュールレベルで保持する
+let wordlistExpandedCats = new Set();
 
 function initWordlistScreen() {
   document.querySelectorAll("#wordlist-filters .filter-chip").forEach((chip) => {
@@ -11,6 +14,16 @@ function initWordlistScreen() {
         .forEach((c) => c.classList.toggle("active", c === chip));
       renderWordlistScreen();
     });
+  });
+
+  document.getElementById("wordlist-content").addEventListener("click", (e) => {
+    const header = e.target.closest(".wordlist-cat-header");
+    if (!header) return;
+    const section = header.closest(".wordlist-cat-section");
+    const cat = header.dataset.cat;
+    const nowOpen = section.classList.toggle("open");
+    if (nowOpen) wordlistExpandedCats.add(cat);
+    else wordlistExpandedCats.delete(cat);
   });
 
   document.getElementById("wordlist-index-toggle").addEventListener("click", () => {
@@ -75,7 +88,13 @@ function jumpToWordlistCategory(cat) {
   // （見出しは自分のセクション末尾に貼り付いた位置に残っていることがあり、
   // それを基準にすると本来の先頭ではなくセクションの終わり際に着地してしまうため）
   const section = document.querySelector(`#wordlist-content .wordlist-cat-section[data-cat="${cat}"]`);
-  if (section) section.scrollIntoView({ block: "start" });
+  if (!section) return;
+  // 索引レールから跳んだ先は中身を見たいはずなので、閉じていたら開いてからスクロールする
+  if (!section.classList.contains("open")) {
+    section.classList.add("open");
+    wordlistExpandedCats.add(cat);
+  }
+  section.scrollIntoView({ block: "start" });
 }
 
 function toggleWordlistIndexRail(forceOpen) {
@@ -213,10 +232,14 @@ function renderWordlistScreen() {
           `;
         })
         .join("");
+      const isOpen = wordlistExpandedCats.has(cat);
       return `
-        <div class="wordlist-cat-section" data-cat="${cat}">
-          <div class="wordlist-cat-header" data-cat="${cat}">【${cat}】 ${items.length}語</div>
-          ${rows}
+        <div class="wordlist-cat-section${isOpen ? " open" : ""}" data-cat="${cat}">
+          <button type="button" class="wordlist-cat-header" data-cat="${cat}">
+            <span>【${cat}】 ${items.length}語</span>
+            <span class="accordion-arrow">▶</span>
+          </button>
+          <div class="wordlist-cat-body">${rows}</div>
         </div>
       `;
     })

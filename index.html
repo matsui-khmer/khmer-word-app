@@ -75,26 +75,28 @@
       <div class="rank-title" id="home-rank-title">見習い冒険者</div>
     </div>
 
-    <div class="stat-row">
-      <div class="stat-tile dq-window">
-        <div class="value" id="home-streak">0</div>
-        <div class="label">連続日数</div>
-      </div>
-      <div class="stat-tile dq-window">
-        <div class="value" id="home-level">1</div>
-        <div class="label">レベル</div>
-      </div>
-      <div class="stat-tile dq-window">
-        <div class="value" id="home-due-count">0</div>
-        <div class="label">今日の復習</div>
-      </div>
-      <div class="stat-tile dq-window">
-        <div class="value" id="home-total-days">0</div>
-        <div class="label">累計日数</div>
-      </div>
-      <div class="stat-tile dq-window">
-        <div class="value" id="home-total-time">0分</div>
-        <div class="label">累計学習時間</div>
+    <div class="stat-panel dq-window">
+      <div class="stat-panel-grid">
+        <div class="stat-item">
+          <div class="value" id="home-streak">0</div>
+          <div class="label">連続日数</div>
+        </div>
+        <div class="stat-item">
+          <div class="value" id="home-level">1</div>
+          <div class="label">レベル</div>
+        </div>
+        <div class="stat-item">
+          <div class="value" id="home-due-count">0</div>
+          <div class="label">今日の復習</div>
+        </div>
+        <div class="stat-item">
+          <div class="value" id="home-total-days">0</div>
+          <div class="label">累計日数</div>
+        </div>
+        <div class="stat-item">
+          <div class="value" id="home-total-time">0分</div>
+          <div class="label">累計学習時間</div>
+        </div>
       </div>
     </div>
 
@@ -104,9 +106,9 @@
         <span id="home-xp-next">次のレベルまで あと100</span>
       </div>
       <div class="xp-bar-track"><div class="xp-bar-fill" id="home-xp-bar" style="width:0%"></div></div>
-    </div>
 
-    <div class="card dq-window">
+      <div class="card-divider"></div>
+
       <div class="card-label-row">
         <span>今日の目標</span>
         <span id="home-goal-label">0 / 20問（残り20問）</span>
@@ -353,17 +355,26 @@
     <div style="height:14px;"></div>
 
     <div class="card dq-window" id="settings-toggles-card">
-      <label style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <label class="switch-row">
         <span>読み仮名を表示する</span>
-        <input type="checkbox" id="setting-show-reading" checked>
+        <span class="switch">
+          <input type="checkbox" id="setting-show-reading" checked>
+          <span class="switch-slider"></span>
+        </span>
       </label>
-      <label style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <label class="switch-row">
         <span>日本語→クメール語の出題を含める</span>
-        <input type="checkbox" id="setting-enable-jp-to-km" checked>
+        <span class="switch">
+          <input type="checkbox" id="setting-enable-jp-to-km" checked>
+          <span class="switch-slider"></span>
+        </span>
       </label>
-      <label style="display:flex; justify-content:space-between; align-items:center;">
+      <label class="switch-row switch-row-last">
         <span>ボタンの効果音を鳴らす</span>
-        <input type="checkbox" id="setting-sound-enabled" checked>
+        <span class="switch">
+          <input type="checkbox" id="setting-sound-enabled" checked>
+          <span class="switch-slider"></span>
+        </span>
       </label>
     </div>
 
