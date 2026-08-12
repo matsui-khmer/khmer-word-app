@@ -438,10 +438,27 @@ function handleAnswer(isCorrect) {
   showFeedbackBanner(isCorrect, xpDelta);
   tutorialNotifyAnswered();
 
-  setTimeout(() => {
-    s.index++;
-    renderQuizScreen();
-  }, 900);
+  const waitForTap = !isCorrect && App.user.settings.advanceOnWrong === "tap";
+  if (waitForTap) {
+    showQuizNextButton();
+  } else {
+    setTimeout(() => advanceToNextQuestion(), 900);
+  }
+}
+
+function advanceToNextQuestion() {
+  const s = App.session;
+  s.index++;
+  renderQuizScreen();
+}
+
+function showQuizNextButton() {
+  const el = document.getElementById("quiz-feedback-banner");
+  el.insertAdjacentHTML(
+    "beforeend",
+    `<button class="cta-button quiz-next-btn" id="quiz-next-btn">次の問題へ</button>`
+  );
+  document.getElementById("quiz-next-btn").addEventListener("click", advanceToNextQuestion);
 }
 
 function showFeedbackBanner(isCorrect, xpDelta) {

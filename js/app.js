@@ -68,6 +68,13 @@ function initSettingsScreen() {
       saveUserState(App.user);
     });
   });
+  document.querySelectorAll('input[name="advance-on-wrong"]').forEach((radio) => {
+    radio.addEventListener("change", (e) => {
+      if (!e.target.checked) return;
+      App.user.settings.advanceOnWrong = e.target.value;
+      saveUserState(App.user);
+    });
+  });
   document.querySelectorAll('input[name="session-size"]').forEach((radio) => {
     radio.addEventListener("change", (e) => {
       if (!e.target.checked) return;
@@ -99,6 +106,8 @@ function renderSettingsScreen() {
   document.getElementById("setting-sound-enabled").checked = App.user.settings.soundEnabled;
   document.getElementById("setting-scope-all").checked = App.user.settings.quizScope === "all";
   document.getElementById("setting-scope-core70").checked = App.user.settings.quizScope === "core70";
+  document.getElementById("setting-advance-auto").checked = App.user.settings.advanceOnWrong !== "tap";
+  document.getElementById("setting-advance-tap").checked = App.user.settings.advanceOnWrong === "tap";
 
   document.querySelectorAll('input[name="session-size"]').forEach((radio) => {
     radio.checked = Number(radio.value) === App.user.settings.sessionSize;

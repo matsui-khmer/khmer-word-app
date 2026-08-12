@@ -720,6 +720,7 @@ button {
 }
 .feedback-banner.correct { background: var(--success-soft); color: var(--success); }
 .feedback-banner.incorrect { background: var(--danger-soft); color: var(--danger); }
+.quiz-next-btn { margin-top: 8px; }
 
 /* ---------- 単語一覧/図鑑 ---------- */
 .stats-rank-row {

@@ -31,6 +31,7 @@ const DEFAULT_USER_STATE = {
     quizScope: "all",
     sessionSize: 20,
     dailyGoal: 20,
+    advanceOnWrong: "auto", // "auto": 不正解でもすぐ次の問題へ / "tap": タップするまで次に進まない
   },
 };
 
