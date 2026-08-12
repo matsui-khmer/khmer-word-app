@@ -24,19 +24,9 @@ function startQuizSession() {
 
 const SRS_SESSION_MAX_MINUTES_CAP = 60; // 放置・バックグラウンド化による学習時間の水増し防止
 
-function initQuizScreen() {
-  document.getElementById("quiz-quit-btn").addEventListener("click", () => {
-    if (App.session && App.session.index > 0) {
-      recordSessionTime(App.session);
-      saveUserState(App.user);
-    }
-    App.session = null;
-    navigateTo("home");
-  });
-}
-
-// クイズの最中に図鑑・文法など他の画面へのリンクを誤ってタップしても即座に離脱しないよう、
-// 確認ダイアログを挟む（「中断してホームへ」ボタンは本人の明示的な操作なのでここでは対象外）
+// クイズの最中に図鑑・文法など他の画面へのリンク（下部ナビ等）をタップしても即座に離脱しないよう、
+// 確認ダイアログを挟む。クイズ画面専用の「中断してホームへ」ボタンは廃止し、
+// 下部ナビからの離脱にこのガードで対応する一本化した動線にしている
 function initQuizLeaveGuard() {
   document.addEventListener(
     "click",

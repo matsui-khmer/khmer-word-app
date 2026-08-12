@@ -145,7 +145,6 @@ function initApp() {
   document.querySelectorAll(".app-share-btn").forEach((btn) => btn.addEventListener("click", shareApp));
 
   initHomeScreen();
-  initQuizScreen();
   initQuizLeaveGuard();
   initResultScreen();
   initWordlistScreen();
