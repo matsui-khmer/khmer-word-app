@@ -56,8 +56,10 @@
   var ENDPOINT = 'https://script.google.com/macros/s/AKfycbzZhO-GBYo452gpimrrDYP6AodhhFhFunW3bgRpssdQ6paY-5noa_MUz5aTu-dnFi3m/exec';
 
   // 経路キー -> 転送先の友だち追加URL
+  // youtube は元々YouTube概要欄で使われていた lin.ee/FkgEPw9 をそのまま維持している
+  // (LINE側の追加経路データの連続性を切らないため。2026-09-05に全118動画を調査して確定)
   var ROUTES = {
-    youtube:  'https://lin.ee/xYNh4sE',
+    youtube:  'https://lin.ee/FkgEPw9',
     telegram: 'https://lin.ee/PixZAEy',
     meta:     'https://lin.ee/U9nYZND',
     udemy:    'https://lin.ee/PixZAEy',
