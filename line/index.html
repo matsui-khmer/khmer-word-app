@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>公式LINEへ移動しています</title>
+<noscript><meta http-equiv="refresh" content="0;url=https://lin.ee/PixZAEy"></noscript>
+<style>
+  :root{
+    --bg:#f7f8f7; --card:#ffffff; --ink:#1c2321; --muted:#6b7772;
+    --line:#06c755; --line-ink:#ffffff; --edge:#e3e7e5;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#14181a; --card:#1c2124; --ink:#eef1f0; --muted:#9aa5a1; --edge:#2c3336; }
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",Meiryo,sans-serif;
+    display:flex; align-items:center; justify-content:center; padding:24px;
+  }
+  .card{
+    background:var(--card); border:1px solid var(--edge); border-radius:14px;
+    padding:32px 28px; max-width:380px; width:100%; text-align:center;
+  }
+  h1{ font-size:17px; font-weight:600; margin:0 0 10px; letter-spacing:.01em; }
+  p{ font-size:13px; line-height:1.7; color:var(--muted); margin:0 0 22px; }
+  .btn{
+    display:block; background:var(--line); color:var(--line-ink);
+    text-decoration:none; font-size:15px; font-weight:600;
+    padding:14px 20px; border-radius:10px;
+  }
+  .btn:focus-visible{ outline:3px solid var(--ink); outline-offset:2px; }
+  .dots{ display:inline-block; width:1.6em; text-align:left; }
+</style>
+<script>
+/*
+ * 公式LINE 友だち追加リンクの中継ページ
+ *
+ * 役割: ?src=<経路キー> を受け取り、経路ごとの lin.ee リンクへ即座に転送しつつ、
+ *       裏でGASの計測エンドポイントへ1件だけビーコンを送る。
+ *
+ * 設計方針:
+ *   - 転送を最優先する。計測が失敗しても、必ずLINEへ飛ぶ(jump()は多重防御)。
+ *   - このスクリプトは<head>で同期実行し、通常は本文を描画する前に転送を完了させる。
+ *   - JSを実行しないクローラ(Telegram/LINE/Facebookのリンクプレビュー等)はビーコンを
+ *     送らないため、自動的にボット除外になる。
+ *
+ * 経路を増やすとき: 下のROUTESに「キー: 転送先URL」を足すだけでよい。
+ *   GAS側(LinkTracker_Code.gs)は未知のキーもそのまま記録・集計する。
+ *   表示名をきれいにしたい場合のみ、GASのROUTE_LABELSにも追記する。
+ */
+(function () {
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbzZhO-GBYo452gpimrrDYP6AodhhFhFunW3bgRpssdQ6paY-5noa_MUz5aTu-dnFi3m/exec';
+
+  // 経路キー -> 転送先の友だち追加URL
+  var ROUTES = {
+    youtube:  'https://lin.ee/xYNh4sE',
+    telegram: 'https://lin.ee/PixZAEy',
+    meta:     'https://lin.ee/U9nYZND',
+    udemy:    'https://lin.ee/PixZAEy',
+    profile:  'https://lin.ee/PixZAEy'
+  };
+  var DEFAULT_URL = 'https://lin.ee/PixZAEy';
+
+  var src = '';
+  var target = DEFAULT_URL;
+  try {
+    var m = /[?&]src=([^&]*)/.exec(location.search || '');
+    if (m) {
+      src = decodeURIComponent(m[1]).toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 24);
+    }
+    if (src && ROUTES[src]) target = ROUTES[src];
+  } catch (e) { /* 解析に失敗しても既定リンクへ飛ばす */ }
+
+  // 転送されなかった場合に押してもらうボタンへ、正しい行き先を入れておく
+  document.addEventListener('DOMContentLoaded', function () {
+    var link = document.getElementById('fallback');
+    if (link) link.href = target;
+  });
+
+  var jumped = false;
+  function jump() {
+    if (jumped) return;
+    jumped = true;
+    // replace にして履歴を汚さない(戻るとYouTube等の元ページに戻れる)
+    location.replace(target);
+  }
+
+  // 何が起きても最後は必ず転送する
+  setTimeout(jump, 1500);
+
+  // 経路指定なしのアクセスは記録せずそのまま転送する
+  if (!src) { jump(); return; }
+
+  var dev = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '') ? 'm' : 'd';
+  var ref = '';
+  try { ref = (document.referrer || '').slice(0, 200); } catch (e) { ref = ''; }
+  var q = '?src=' + encodeURIComponent(src) + '&d=' + dev + '&ref=' + encodeURIComponent(ref);
+
+  // sendBeacon は離脱後も送信が保証されるため、待たずに転送してよい。
+  // Content-Type を text/plain にしているのは、プリフライト(OPTIONS)を発生させないため。
+  // GASはOPTIONSに応答できないので、application/json にすると送信が失敗する。
+  var sent = false;
+  try {
+    if (navigator.sendBeacon) {
+      sent = navigator.sendBeacon(ENDPOINT + q + '&m=beacon', new Blob(['1'], { type: 'text/plain' }));
+    }
+  } catch (e) { sent = false; }
+
+  if (sent) { jump(); return; }
+
+  // sendBeacon が使えない環境向けの保険。画像ビーコンで叩き、応答を待ってから転送する。
+  // GASはテキストを返すので必ず onerror 側に来るが、その時点で記録は済んでいる。
+  try {
+    var img = new Image();
+    img.onload = jump;
+    img.onerror = jump;
+    img.src = ENDPOINT + q + '&m=image&_=' + Date.now();
+    setTimeout(jump, 700);
+  } catch (e) {
+    jump();
+  }
+})();
+</script>
+</head>
+<body>
+  <main class="card">
+    <h1>公式LINEへ移動しています<span class="dots">…</span></h1>
+    <p>切り替わらない場合は、下のボタンから友だち追加ページを開いてください。</p>
+    <a class="btn" id="fallback" href="https://lin.ee/PixZAEy">友だち追加ページを開く</a>
+  </main>
+</body>
+</html>

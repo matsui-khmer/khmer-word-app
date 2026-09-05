@@ -58,6 +58,9 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  // 公式LINEの中継ページ(/line/)はアプリの一部ではないので、キャッシュに触れさせない。
+  // キャッシュ優先で返すと転送先リンクを変更しても古いページが使われ続けてしまうため。
+  if (event.request.url.includes("/line/")) return;
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
