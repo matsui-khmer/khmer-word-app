@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>公式LINEへ移動しています</title>
-<noscript><meta http-equiv="refresh" content="0;url=https://lin.ee/PixZAEy"></noscript>
+<noscript><meta http-equiv="refresh" content="0;url=https://line.me/R/ti/p/@122xtnfp"></noscript>
 <style>
   :root{
     --bg:#f7f8f7; --card:#ffffff; --ink:#1c2321; --muted:#6b7772;
@@ -56,16 +56,21 @@
   var ENDPOINT = 'https://script.google.com/macros/s/AKfycbzZhO-GBYo452gpimrrDYP6AodhhFhFunW3bgRpssdQ6paY-5noa_MUz5aTu-dnFi3m/exec';
 
   // 経路キー -> 転送先の友だち追加URL
-  // youtube は元々YouTube概要欄で使われていた lin.ee/FkgEPw9 をそのまま維持している
-  // (LINE側の追加経路データの連続性を切らないため。2026-09-05に全118動画を調査して確定)
+  //
+  // 2026-09-07: 転送先を lin.ee から line.me の直リンクへ全面的に切り替えた。
+  // カンボジアの回線(固定・モバイルとも)で lin.ee のAレコードが誤ったIP(203.190.164.182)を返し、
+  // TCP 443に到達できない状態になっていたため。line.me / page.line.me は正常に引けて疎通する。
+  // lin.ee が返していた最終URLがこの line.me/R/ti/p/@122xtnfp なので、着地の挙動は従来と同じ。
+  // LINE側の「追加経路」属性は失われるが、20件閾値のため元々使えていないので実害はない。
+  // 経路の判別はこの中継ページの ?src= で行っており、転送先が何であれ計測には影響しない。
   var ROUTES = {
-    youtube:  'https://lin.ee/FkgEPw9',
-    telegram: 'https://lin.ee/PixZAEy',
-    meta:     'https://lin.ee/U9nYZND',
-    udemy:    'https://lin.ee/PixZAEy',
-    profile:  'https://lin.ee/PixZAEy'
+    youtube:  'https://line.me/R/ti/p/@122xtnfp',
+    telegram: 'https://line.me/R/ti/p/@122xtnfp',
+    meta:     'https://line.me/R/ti/p/@122xtnfp',
+    udemy:    'https://line.me/R/ti/p/@122xtnfp',
+    profile:  'https://line.me/R/ti/p/@122xtnfp'
   };
-  var DEFAULT_URL = 'https://lin.ee/PixZAEy';
+  var DEFAULT_URL = 'https://line.me/R/ti/p/@122xtnfp';
 
   var src = '';
   var target = DEFAULT_URL;
@@ -132,7 +137,7 @@
   <main class="card">
     <h1>公式LINEへ移動しています<span class="dots">…</span></h1>
     <p>切り替わらない場合は、下のボタンから友だち追加ページを開いてください。</p>
-    <a class="btn" id="fallback" href="https://lin.ee/PixZAEy">友だち追加ページを開く</a>
+    <a class="btn" id="fallback" href="https://line.me/R/ti/p/@122xtnfp">友だち追加ページを開く</a>
   </main>
 </body>
 </html>
