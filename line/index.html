@@ -45,8 +45,10 @@
  * 設計方針:
  *   - 転送を最優先する。計測が失敗しても、必ずLINEへ飛ぶ(jump()は多重防御)。
  *   - このスクリプトは<head>で同期実行し、通常は本文を描画する前に転送を完了させる。
- *   - JSを実行しないクローラ(Telegram/LINE/Facebookのリンクプレビュー等)はビーコンを
- *     送らないため、自動的にボット除外になる。
+ *   - JSを実行しないクローラはビーコンを送らないので、そのぶんは自動的に除外される。
+ *     **ただしFacebookのクローラはページを描画するので、これだけでは除外しきれない**
+ *     (2026-10-14に再現して確認。URLをFacebookに出すと35秒おきに3回来る)。
+ *     そのためユーザーエージェントも送って、集計側で仕分ける。
  *
  * 経路を増やすとき: 下のROUTESに「キー: 転送先URL」を足すだけでよい。
  *   GAS側(LinkTracker_Code.gs)は未知のキーもそのまま記録・集計する。
@@ -110,10 +112,25 @@
   // 経路指定なしのアクセスは記録せずそのまま転送する
   if (!src) { jump(); return; }
 
-  var dev = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '') ? 'm' : 'd';
+  // 2026-10-14、ユーザーエージェントも送るようにした。
+  // それまでは「PC／モバイル」しか残していなかったため、
+  // **Facebookのクローラと本物のお客様を見分けられなかった。**
+  // 上の「JSを実行しないクローラは自動的に除外される」という前提は外れている
+  // (Facebookのリンクプレビューのクローラはページを描画してビーコンを送る)。
+  // 2026-10-14に実際に再現: URLをFacebookに投稿すると、ちょうど35秒おきに3回来る。
+  // どちらも try で囲い、例外が出ても転送が止まらないようにする
+  var ua = '';
+  var dev = 'd';
+  try {
+    ua = (navigator.userAgent || '').slice(0, 200);
+    dev = /Mobi|Android|iPhone|iPad|iPod/i.test(ua) ? 'm' : 'd';
+  } catch (e) { ua = ''; dev = 'd'; }
   var ref = '';
   try { ref = (document.referrer || '').slice(0, 200); } catch (e) { ref = ''; }
-  var q = '?src=' + encodeURIComponent(src) + '&d=' + dev + '&ref=' + encodeURIComponent(ref);
+  // q は sendBeacon と画像ビーコンの**両方**で使う。
+  // 片方だけに ua を足すと、そのぶんが空になって「UAが空＝クローラ」と読み違える
+  var q = '?src=' + encodeURIComponent(src) + '&d=' + dev
+        + '&ref=' + encodeURIComponent(ref) + '&ua=' + encodeURIComponent(ua);
 
   // sendBeacon は離脱後も送信が保証されるため、待たずに転送してよい。
   // Content-Type を text/plain にしているのは、プリフライト(OPTIONS)を発生させないため。
