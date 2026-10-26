@@ -53,7 +53,7 @@ const GRAMMAR_TOPICS = [
       },
       {
         rule: "何・誰・いくつなど「はい・いいえ」で答えられない質問は、語順を変えずに聞きたい単語を疑問詞に置き換えるだけです。",
-        example: { khmer: "គាត់ ញ៉ាំ អី？", reading: "コアット　ニャム　アイ", breakdown: "彼／食べる／何", translation: "彼は何を食べますか？" },
+        example: { khmer: "គាត់ ញុាំ អី？", reading: "コアット　ニャム　アイ", breakdown: "彼／食べる／何", translation: "彼は何を食べますか？" },
       },
       {
         rule: "数字を聞きたいときは「ប៉ុន្មាន（ポンマーン）」を使います。",
@@ -68,7 +68,7 @@ const GRAMMAR_TOPICS = [
       { prompt: "「彼は何を食べますか？」の「何」にあたる単語は？", choices: ["អី（アイ）", "នៅ（ナウ）", "ចង់（チョン）", "ទេ（テー）"], correctIndex: 0 },
       { prompt: "「何歳ですか？」と数字を聞きたいときに使う疑問詞は？", choices: ["ប៉ុន្មាន（ポンマーン）", "អ្នកណា（ネアックナー）", "ហេតុអ្វី（ハエトアヴァイ）", "យ៉ាងម៉េច（ヤーンマッ）"], correctIndex: 0 },
     ],
-    reorder: { khmer: "គាត់ ញ៉ាំ អី？", reading: "コアット　ニャム　アイ", translation: "彼は何を食べますか？" },
+    reorder: { khmer: "គាត់ ញុាំ អី？", reading: "コアット　ニャム　アイ", translation: "彼は何を食べますか？" },
   },
   {
     id: "negative",
