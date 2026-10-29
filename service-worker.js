@@ -1,7 +1,7 @@
 // PWAオフラインキャッシュ用 Service Worker
 // データや画面を更新したら CACHE_NAME のバージョン番号を上げること
 
-const CACHE_NAME = "kw-app-v49";
+const CACHE_NAME = "kw-app-v50";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -34,6 +34,15 @@ const APP_SHELL = [
   "./icons/icon-512.png",
   "./icons/icon-maskable-512.png",
   "./icons/apple-touch-icon.png",
+  // 2026-10-29、Google Fonts と LINE のCDNをやめて自前に置いた。
+  // ここに入れておかないと、オフラインのとき字が標準フォントに落ちてしまう。
+  "./fonts/noto-sans-khmer.woff2",
+  "./fonts/noto-sans-jp.woff2",
+  "./fonts/zen-maru-gothic-500.woff2",
+  "./fonts/zen-maru-gothic-700.woff2",
+  "./fonts/zen-maru-gothic-900.woff2",
+  "./fonts/dotgothic16.woff2",
+  "./images/line-add-friend.png",
 ];
 
 self.addEventListener("install", (event) => {
