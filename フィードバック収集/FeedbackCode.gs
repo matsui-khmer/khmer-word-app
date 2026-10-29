@@ -31,6 +31,10 @@ function doPost(e) {
     params.rating || '',
     params.message || '',
     params.appVersion || '',
+    // 2026-10-29以降、アプリは profileName を送ってこない（この列は空になる）。
+    // Google Playのデータセーフティで「個人情報 > 名前を収集する」と
+    // 申告せずに済むよう、送るのをやめた（松井さんの判断）。
+    // **列は消さない。** 2026-07-27〜10-29に届いた分の名前が入っているため。
     params.profileName || ''
   ]);
   updateFeedbackSummary_();

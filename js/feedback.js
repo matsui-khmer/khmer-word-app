@@ -42,7 +42,6 @@ function submitFeedback() {
   }
 
   statusEl.textContent = "送信中…";
-  const profile = getCurrentProfile();
 
   // GAS Webアプリはブラウザからのfetchに対してCORSヘッダーを返せないため、
   // no-corsモードで送信する（レスポンス内容は読めないが、通信自体は成功する）
@@ -50,11 +49,17 @@ function submitFeedback() {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
+    // 2026-10-29: profileName を送るのをやめた（松井さんの判断）。
+    // **利用者がアプリ内で付けた名前を、サーバーへ送っていた。**
+    // 本名を入れる人がいるので、Google Playのデータセーフティでは
+    // 「個人情報 > 名前を収集する」と申告することになる。
+    // そもそもフィードバックに返信する仕組みが無く、名前の使い道が無かった。
+    // 受け側（フィードバック収集/FeedbackCode.gs）は `params.profileName || ''` なので、
+    // 送らなくても壊れない（この日以降の行は、その列が空になる）。
     body: JSON.stringify({
       rating: feedbackSelectedRating || "",
       message,
       appVersion: APP_VERSION,
-      profileName: profile ? profile.name : "",
     }),
   })
     .then(() => {
